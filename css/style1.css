@@ -53,3 +53,14 @@
 .navbar ul li:hover::after {
     width: 100%;
 }
+
+  
+  .sphere {
+    fill: #7676b9;
+  }
+  
+  .country {
+    fill: lightgreen;
+    stroke: black;
+    stroke-opacity: 0.1;
+  }
