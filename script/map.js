@@ -1,4 +1,4 @@
-const svg = d3.select('svg');
+const svg = d3.select('.map');
 
 const projection = d3.geoNaturalEarth1();
 const pathGenerator = d3.geoPath().projection(projection);
