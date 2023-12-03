@@ -41,7 +41,7 @@
 }
 .navbar ul li::after{
     content: '';
-    height: 30px;
+    height: 3px;
     width: 0;
     background: #fff;
     position: absolute;
@@ -52,5 +52,3 @@
 .navbar ul li:hover::after{
     width: 100%;
 }
-
-
