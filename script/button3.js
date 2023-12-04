@@ -1,8 +1,11 @@
+let w = 600, h = 300;
+let padding = 30;
+let svg = d3.append("svg").attr("width",w).attr("height",h);
+svg.style("background-color","Yellow");
 
-        // Load both CSV files
         Promise.all([
-            d3.csv('population_data.csv'),
-            d3.csv('temperature_data.csv')
+            d3.csv('Global_annual_population.csv'),
+            d3.csv('Blobal_annual_mean_temp.csv')
         ]).then(function (data) {
             const populationData = data[0];
             const temperatureData = data[1];
