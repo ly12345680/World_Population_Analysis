@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
     <link rel="stylesheet" href="../css/style3.css">
+    <title>World population and temperature</title>
 </head>
-<body>
-    <div class="container">
-        <div class="navbar">
-            <ul>
-                <li><a href="button2.html">BACK</a></li>
-            </ul>
-            <ul class="right">
-                <li><a href="button4.html">NEXT</a></li>
-            </ul>
-        </div>
+<body> 
+  <div class="container">
+    <div class="navbar">
+      <div class="name">
+        <h1>IMPACT TO CLIMATE</h1>
+      </div>
+      <ul>
+        <li><a href="main.html">Home</a></li>
+        <li><a href="button1.html" id="button1Link">Button1</a></li>
+        <li><a href="button2.html" id="button2Link">Button2</a></li>
+        <li><a href="button3.html" id="button3Link"><u>ANNUAL WP&T</a></u></li>
+        <li><a href="button4.html" id="button4Link">Button4</a></li>
+      </ul>
     </div>
-    <script src="button3.js"></script>
+  </div>
+  <canvas id="chart" width="400" height="200"></canvas>
+  <canvas id="temperature-chart" width="400" height="200"></canvas>
+  <script src="button3.js"></script>
+  
 </body>
 </html>
