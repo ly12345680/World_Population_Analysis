@@ -1,4 +1,4 @@
-const h = 500, w = 1500, padding = 20
+const h = 500, w = 1500, padding = 25
 
 async function loadData(url) {
   try {
@@ -60,6 +60,9 @@ async function drawBarChart(){
     const data = object.data
     const width = 15
     const middlePadding = 7
+    const tooltip = d3.select(".container").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
    
     console.log(data)
 
@@ -89,6 +92,32 @@ async function drawBarChart(){
     .attr("fill", (d) => {
         return "rgb(0,"+ colorScale(parseFloat(d.population)) + ",0)"
     })
+
+    .on("mouseover", function (event, d) {
+        d3.select(this)
+        .attr("fill", (d) => {
+            // Adjust brightness or color for glowing effect
+            return "rgb(255," + (colorScale(parseFloat(d.population))) + ",0)";
+        });
+
+    tooltip.transition()
+        .duration(200)
+        .style("opacity", 0.9);
+    tooltip.html(`<strong>Year:</strong> ${d.year}<br/><strong>Population:</strong> ${d.population}`+" Billion")
+        .style("left", event.pageX + "px")
+        .style("top", event.pageY - 28 + "px");
+    })
+    .on("mouseout", function () {
+        d3.select(this)
+        .attr("fill", (d) => {
+            return "rgb(0," + colorScale(parseFloat(d.population)) + ",0)";
+        });
+
+    tooltip.transition()
+        .duration(500)
+        .style("opacity", 0);
+});
+
 
     xLabel.text("Year")
     .attr("x", w/3)
