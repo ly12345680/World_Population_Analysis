@@ -13,7 +13,7 @@ async function loadData(url) {
 async function scaleConstBar(){
     const dataRaw = await loadData("../asset/data/Global_annual_population.csv")
     let data = []
-    for(let i = 0; i < dataRaw.length; i++){
+    for(let i = 10; i < dataRaw.length; i++){
         data.push({"year": dataRaw[i]["Year"],"population": dataRaw[i][" Population"]})
     }
 
@@ -32,25 +32,27 @@ async function scaleConstBar(){
     return {'data': data, 'xScale':null, 'yScale':yScale, 'colorScale': colorScale}
 }
 
-// async function scaleConstLine(){
-//     const dataRaw = await loadData('./Global_annual_mean_temp.csv')
+    // async function scaleConstLine(){
+    //     const dataRaw = await loadData('../asset/data/Global_annual_mean_temp.csv')
+    //     let data = []
+    //     for(let i = 0; i < dataRaw.length-1; i++){
+    //         data.push({"year": dataRaw[i]["Year"],"no_smoothing": dataRaw[i]["No_Smoothing"]})
+    //     }
+    //     console.log(data)
+    //     // const xScale = d3.scaleLinear()
+    //     // .domain([0, d3.max(data, function(d) { return d.No_Smoothing; })])
+    //     // .range([padding, w - padding]);
+        
+    //     const yScale = d3.scaleLinear()
+    //     .domain([d3.max(data, function(d) { return d.No_Smoothing; }), 0])
+    //     .range([h - padding, padding]);
 
-//     console.log(dataRaw)
+    //     const colorScale = d3.scaleLinear()
+    //     .domain([d3.min(data, (d) => {return d.No_Smoothing},d3.max(data, (d) => {return d.No_Smoothing}))])
+    //     .range([0, 255])
 
-//     const xScale = d3.scaleLinear()
-//     .domain([0, d3.max(data, function(d) { return d.population; })])
-//     .range([padding, w - padding]);
-    
-//     const yScale = d3.scaleLinear()
-//     .domain([d3.max(data, function(d) { return d.population; }), 0])
-//     .range([h - padding, padding]);
-
-//     const colorScale = d3.scaleLinear()
-//     .domain([d3.min(data, (d) => {return d.population},d3.max(data, (d) => {return d.population}))])
-//     .range([0, 255])
-
-//     return {'data': data, 'xScale':null, 'yScale':yScale, 'colorScale': colorScale}
-// }
+    //     return {'data': data, 'xScale':null, 'yScale':yScale, 'colorScale': colorScale}
+    // }
 
 async function drawBarChart(){
     const object = await scaleConstBar()
@@ -104,8 +106,10 @@ async function drawBarChart(){
         .duration(200)
         .style("opacity", 0.9);
     tooltip.html(`<strong>Year:</strong> ${d.year}<br/><strong>Population:</strong> ${d.population}`+" Billion")
-        .style("left", event.pageX + "px")
-        .style("top", event.pageY - 28 + "px");
+        .style("left", event.clientX + "px")
+        .style("top", event.clientY - 28 + "px")
+        .style("z", 5)
+        .style("background_color", "red");
     })
     .on("mouseout", function () {
         d3.select(this)
@@ -116,7 +120,7 @@ async function drawBarChart(){
     tooltip.transition()
         .duration(500)
         .style("opacity", 0);
-});
+    });
 
 
     xLabel.text("Year")
@@ -134,6 +138,48 @@ async function drawBarChart(){
     // .attr("transform", "translate(" + 20 + "," + (h) + ")")
     // .call(xAxis = d3.axisBottom().scale(xScale));
 }
+
+// async function drawScaleConstLine(){
+//     const object = await scaleConstLine()
+//     const xScale = object.xScale
+//     const yScale = object.yScale
+//     const colorScale = object.colorScale
+//     const data = object.data
+//     const width = 15
+//     const middlePadding = 7
+//     const tooltip = d3.select(".container").append("div")
+//     .attr("class", "tooltip")
+//     .style("opacity", 0);
+    
+//     console.log(data)
+
+//     let svg = d3.select(".container").append("div")
+//     .attr("class", "linechart")
+//     .append("svg")
+//     .attr("height", h)
+//     .attr("width", w)
+
+//     let xLabel = svg.selectAll('xLabel').data(data).enter().append('text')
+//     let yLabel = svg.selectAll('yLabel').data(data).enter().append('text')
+
+//     let line =  svg.selectAll("line")
+//         .data(data)
+//         .enter()
+//         .append("line");
+
+//     rect.attr("width", () => {
+//         return width
+//     }).attr("height", (d) => {
+//         return yScale(d.No_Smoothing)
+//     }).attr("y", (d) => {
+//         return h - yScale(d.No_Smoothing) - padding
+//     }).attr("x", (d, i) => {
+//         return i * width + i * middlePadding + padding
+//     })
+//     .attr("fill", (d) => {
+//         return "rgb(0,"+ colorScale(parseFloat(d.No_Smoothing)) + ",0)"
+//     })
+// }
 
 drawBarChart()
   
