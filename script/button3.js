@@ -94,7 +94,7 @@ async function drawBarChart(){
     
 
     const yScaleForPop = d3.scaleLinear()
-    .domain([0, d3.max(data, function(d) { return d.population; })]) // Reversed domain
+    .domain([0, d3.max(data, function(d) { return Math.ceil(d.population); })]) // Reversed domain
     .range([h - padding, padding]);
 
     const yAxis = d3.axisLeft(yScaleForPop);
@@ -121,14 +121,14 @@ async function drawBarChart(){
     rect.attr("width", () => {
         return width
     }).attr("height", (d) => {
-        return yScale(d.population)
+        return yScale(d.population) - 39.3
     }).attr("y", (d) => {
-        return h - yScale(d.population) - padding
+        return h - yScale(d.population) - padding + 35
     }).attr("x", (d, i) => {
         return i * width + i * middlePadding + padding + 7
     })
     .attr("fill", (d) => {
-        return "rgb(0,"+ colorScale(parseFloat(d.population)) + ",0)"
+        return `rgb(${colorScale(parseFloat(d.population))},${colorScale(parseFloat(d.population))}, ${colorScale(parseFloat(d.population))})`
     })
 
     .on("mouseover", function (event, d) {
@@ -151,7 +151,7 @@ async function drawBarChart(){
     .on("mouseout", function () {
         d3.select(this)
         .attr("fill", (d) => {
-            return "rgb(0," + colorScale(parseFloat(d.population)) + ",0)";
+            return `rgb(${colorScale(parseFloat(d.population))},${colorScale(parseFloat(d.population))},${colorScale(parseFloat(d.population))})`;
         });
 
     tooltip.transition()
