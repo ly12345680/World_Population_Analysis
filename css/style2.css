@@ -53,3 +53,18 @@
 .navbar ul li:hover::after {
     width: 100%;
 }
+
+.bar {
+    fill: steelblue;
+  }
+.bar:hover {
+    fill: rgb(255, 214, 33);
+  }
+
+  .tooltip {
+    position: absolute;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 10px;
+    opacity: 0;
+  }

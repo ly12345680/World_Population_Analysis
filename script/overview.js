@@ -22,7 +22,7 @@ d3.csv("../asset/data/world_population.csv", rowConvertor).then(data => {
 
 
 function createBarChart(data) {
-  chartData = data;
+    chartData = data;
 
     const barChart = d3.select("#chartContainer");
   
@@ -77,6 +77,10 @@ function createBarChart(data) {
       .style("fill", "white")
       .style("stroke", "white");
   
+    const tooltip = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+      
     // Draw vertical bars with colorScale
     svg.selectAll(".bar")
       .data(data)
@@ -86,7 +90,19 @@ function createBarChart(data) {
       .attr("width", xScale.bandwidth())
       .attr("y", d => yScale(d.population))
       .attr("height", d => height - yScale(d.population))
-      .style("fill", d => colorScale(d.population));
+      .style("fill", d => colorScale(d.population))
+      .on("mouseover", (event, d) => {
+        // Show tooltip on mouseover
+        tooltip
+          .style("opacity", 1)
+          .html(`Country: ${d.country}<br>Population: ${d.population}`)
+          .style("left", event.pageX + "px")
+          .style("top", event.pageY + "px");
+      })
+      .on("mouseout", () => {
+        // Hide tooltip on mouseout
+        tooltip.style("opacity", 0);
+      });
 
     
 } // end function createBarChart
