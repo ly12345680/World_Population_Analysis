@@ -6,7 +6,7 @@
 
 .container {
     width: 100%;
-    height: 100vh;
+    height: 150vh;
     background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(../asset/image/background.jpg);
     background-size: cover;
     background-position: center;
@@ -56,7 +56,7 @@
 
   
   .sphere {
-    fill: #b1b1e2;
+    fill: #6eace9;
   }
   
   .country {
@@ -66,4 +66,12 @@
   }
 .country:hover{
     fill: red;
+}
+
+#legend {
+    width: 20%;
+    position: fixed; 
+    bottom: 20px; 
+    right: 20px; 
+    padding: 20px;
 }

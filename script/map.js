@@ -1,3 +1,4 @@
+
 const svg = d3.select('.map')
   .attr('width', window.innerWidth)
   .attr('height', window.innerHeight-80);
@@ -40,9 +41,10 @@ Promise.all([
   // console.log(countries);
   
   // Create a color scale
-  const maxGrowthRate = d3.max(countries.features, d => d.properties.growthRate);
-  const colorScale = d3.scaleOrdinal(d3.schemeCategory10)
-    .domain([0, maxGrowthRate]);
+  const maxGrowthRate = d3.extent(countries.features, d => d.properties.growthRate);
+  const colorScale = d3.scaleLinear()
+    .domain(maxGrowthRate)
+    .range(["#cce599", "#004045"]);
   // console.log(colorScale.domain());
 
   g.selectAll('path').data(countries.features)
@@ -50,8 +52,13 @@ Promise.all([
     .attr('class', 'country')
     .attr('d', pathGenerator)
     .attr('fill', d => colorScale(d.properties.growthRate))
+    .on('click', d => window.open("../html/button4.html", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400"))
     .append('title')
     .text(d => countryName[d.id]);
+
+    d3.Legend(colorScale, {
+      title: "Your Legend Title"
+    });
 })
 
 
