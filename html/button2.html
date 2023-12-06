@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../css/style2.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -19,14 +20,14 @@
                 <li><a href="button3.html">NEXT</a></li>
             </ul>
         </div>
-        <div id="chartContainer">
+        <div id="buttonContainer">
             <input type="text" id="countryInput" placeholder="Enter country name">
             <button id="add-country" onclick="addButton()">Add Country</button>
             <button id="delete-country" onclick="deleteButton()">Delete Country</button>
         </div>
+        <div id = "chartContainer" ></div>
     </div>
     
-    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="../script/overview.js"></script>
 </body>
 </html>
