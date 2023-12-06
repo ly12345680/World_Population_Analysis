@@ -56,7 +56,7 @@ Promise.all([
     .append('title')
     .text(d => countryName[d.id]);
 
-    d3.Legend(colorScale, {
+    Legend(colorScale, {
       title: "Your Legend Title"
     });
 })
