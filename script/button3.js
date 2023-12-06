@@ -32,28 +32,6 @@ async function scaleConstBar(){
     return {'data': data, 'xScale':null, 'yScale':yScale, 'colorScale': colorScale}
 }
 
-    // async function scaleConstLine(){
-    //     const dataRaw = await loadData('../asset/data/Global_annual_mean_temp.csv')
-    //     let data = []
-    //     for(let i = 0; i < dataRaw.length-1; i++){
-    //         data.push({"year": dataRaw[i]["Year"],"no_smoothing": dataRaw[i]["No_Smoothing"]})
-    //     }
-    //     console.log(data)
-    //     // const xScale = d3.scaleLinear()
-    //     // .domain([0, d3.max(data, function(d) { return d.No_Smoothing; })])
-    //     // .range([padding, w - padding]);
-        
-    //     const yScale = d3.scaleLinear()
-    //     .domain([d3.max(data, function(d) { return d.No_Smoothing; }), 0])
-    //     .range([h - padding, padding]);
-
-    //     const colorScale = d3.scaleLinear()
-    //     .domain([d3.min(data, (d) => {return d.No_Smoothing},d3.max(data, (d) => {return d.No_Smoothing}))])
-    //     .range([0, 255])
-
-    //     return {'data': data, 'xScale':null, 'yScale':yScale, 'colorScale': colorScale}
-    // }
-
 async function drawBarChart(){
     const object = await scaleConstBar()
     const xScale = object.xScale
@@ -179,50 +157,112 @@ async function drawBarChart(){
     // .attr("transform", "translate(" + 20 + "," + (h) + ")")
     // .call(xAxis = d3.axisBottom().scale(xScale));
 }
-
-// async function drawScaleConstLine(){
-//     const object = await scaleConstLine()
-//     const xScale = object.xScale
-//     const yScale = object.yScale
-//     const colorScale = object.colorScale
-//     const data = object.data
-//     const width = 15
-//     const middlePadding = 7
-//     const tooltip = d3.select(".container").append("div")
-//     .attr("class", "tooltip")
-//     .style("opacity", 0);
-    
-//     console.log(data)
-
-//     let svg = d3.select(".container").append("div")
-//     .attr("class", "linechart")
-//     .append("svg")
-//     .attr("height", h)
-//     .attr("width", w)
-
-//     let xLabel = svg.selectAll('xLabel').data(data).enter().append('text')
-//     let yLabel = svg.selectAll('yLabel').data(data).enter().append('text')
-
-//     let line =  svg.selectAll("line")
-//         .data(data)
-//         .enter()
-//         .append("line");
-
-//     rect.attr("width", () => {
-//         return width
-//     }).attr("height", (d) => {
-//         return yScale(d.No_Smoothing)
-//     }).attr("y", (d) => {
-//         return h - yScale(d.No_Smoothing) - padding
-//     }).attr("x", (d, i) => {
-//         return i * width + i * middlePadding + padding
-//     })
-//     .attr("fill", (d) => {
-//         return "rgb(0,"+ colorScale(parseFloat(d.No_Smoothing)) + ",0)"
-//     })
-// }
-
 drawBarChart()
+
+
+async function scaleConstLine(){
+    const dataRaw = await loadData('../asset/data/Global_annual_mean_temp.csv')
+    let data = []
+    for(let i = 0; i < dataRaw.length-1; i++){
+        data.push({"year": +dataRaw[i]["Year"], "no_smoothing": +dataRaw[i]["No_Smoothing"]})
+    }
+
+    const xScale = d3.scaleLinear()
+        .domain([d3.min(data, d => d.year), d3.max(data, d => d.year)])
+        .range([padding, w - padding]);
+
+    const yScale = d3.scaleLinear()
+        .domain([d3.min(data, d => d.no_smoothing), d3.max(data, d => d.no_smoothing)])
+        .range([h - padding - 200, padding + 30]);
+
+    const colorScale = d3.scaleLinear()
+        .domain([d3.min(data, d => d.no_smoothing), d3.max(data, d => d.no_smoothing)])
+        .range([0, 255]);
+
+    return {'data': data, 'xScale': xScale, 'yScale': yScale, 'colorScale': colorScale};
+}
+
+async function drawLineChart(){
+    const object = await scaleConstLine();
+    const yScale = object.yScale;
+    const colorScale = object.colorScale;
+    const data = object.data;
+    const tooltip = d3.select(".container").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+
+    let svg = d3.select("svg")
+
+    const xScale = d3.scaleBand()
+        .domain(data.map(d => d.year))
+        .range([padding, w - padding])
+        .padding(0.1);
+
+    const line = d3.line()
+        .x(d => xScale(d.year) + 13)
+        .y(d => yScale(d.no_smoothing) - 30);
+
+    svg.append("path")
+        .datum(data)
+        .attr("fill", "none")
+        .attr("stroke", "red") // Adjust color as needed
+        .attr("stroke-width", 2)
+        .attr("d", line);
+
+    svg.selectAll(".dot")
+        .data(data)
+        .enter().append("circle")
+        .attr("class", "dot")
+        .attr("cx", d => xScale(d.year) + 13)
+        .attr("cy", d => yScale(d.no_smoothing) - 30)
+        .attr("r", 4)
+        .attr("fill", "red") // Adjust color as needed
+
+        .on("mouseover", function (event, d) {
+            d3.select(this).attr("r", 6); // Enlarge the dot on hover
+
+            tooltip.transition()
+                .duration(200)
+                .style("opacity", 0.9);
+            tooltip.html(`<strong>Year:</strong> ${d.year}<br/><strong>No_Smoothing:</strong> ${d.no_smoothing}`)
+                .style("left", event.clientX + "px")
+                .style("top", event.clientY - 28 + "px")
+                .style("z", 5)
+                .style("background_color", "red")
+                .style("color", "white");
+        })
+
+        .on("mouseout", function () {
+            d3.select(this).attr("r", 4); // Revert dot size on mouseout
+
+            tooltip.transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
+
+        const yAxisForNoSmoothing = d3.axisRight(yScale);
+
+        svg.append("g")
+            .attr("class", "y-axis-no-smoothing")
+            .attr("transform", `translate(${padding}, 0)`)
+            .call(yAxisForNoSmoothing)
+            .attr("fill", "white");
+    
+        svg.selectAll(".y-axis-no-smoothing .tick text") 
+            .attr("fill", "white");
+    
+        
+        svg.append("text")
+            .attr("transform", `translate(${w - padding}, ${h / 2}) rotate(-90)`)
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .style("fill", "white")
+            .text("No_Smoothing");
+    }
+
+// Call the function to draw the line chart
+drawLineChart();
+
   
 
 
