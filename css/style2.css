@@ -68,3 +68,10 @@
     padding: 10px;
     opacity: 0;
   }
+#buttonContainer {
+    padding: 50px 20px;
+}
+#chartContainer {
+    padding: 50px ;
+}
+

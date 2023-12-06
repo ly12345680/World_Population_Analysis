@@ -26,8 +26,8 @@ function createBarChart(data) {
 
     const barChart = d3.select("#chartContainer");
   
-    const chartWidth = 800;
-    const chartHeight = 600;
+    const chartWidth = 700;
+    const chartHeight = 500;
 
     const margin = { top: 50, right: 20, bottom: 60, left: 100 };
     const width = chartWidth - margin.left - margin.right;
@@ -80,7 +80,7 @@ function createBarChart(data) {
     const tooltip = d3.select("body").append("div")
       .attr("class", "tooltip")
       .style("opacity", 0);
-      
+
     // Draw vertical bars with colorScale
     svg.selectAll(".bar")
       .data(data)
