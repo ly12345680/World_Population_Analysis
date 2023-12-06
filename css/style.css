@@ -10,7 +10,6 @@
     background-image: linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.75)),url(../asset/image/background.jpg);
     background-size: cover;
     background-position: center;
-
 }
 .navbar{
     width: 85%;
@@ -19,6 +18,7 @@
     display: flex;
     align-self: center;
     justify-content: space-between;
+    border: 1px solid #ccc;
 
 }
 .name{
@@ -27,6 +27,7 @@
     cursor: pointer;
     margin-left: -10px;
     margin-top: -10px;
+    border: 1px solid #ccc ;
 }
 .navbar ul li{
     list-style: none;
@@ -52,4 +53,43 @@
 .navbar ul li:hover::after{
     width: 100%;
 }
+.content{
+    width: 85%;
+    margin: auto;
+    padding: 35px 0;
+    display: flex;
+    align-self: center;
+    justify-content: center; /* Move the group members to the middle of the content section */
+    border: 1px solid red;
+}
+.groupMember {
+    margin: auto; /* Center the group members within the content section */
+    width: 50%; /* Make the group members narrower */
+    text-align: center;
+    border: 1px solid #fff  ; /* Center-align the text */
+}
 
+.groupMember h1 {
+    color: aliceblue;
+    margin: auto;
+}
+
+.groupMember ul {
+    list-style: none;
+    padding: 0;
+}
+
+.groupMember li {
+    color: aliceblue;
+    margin: 10px 0; /* Add some margin between list items for better readability */
+}
+.intro{
+    height: 25%;
+    width: 85%;
+    margin: auto;
+    padding: 35px 0;
+    display: flex;
+    align-self: center;
+    justify-content: center; /* Move the group members to the middle of the content section */
+    border: 1px solid yellow; 
+}
