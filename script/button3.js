@@ -1,4 +1,4 @@
-const h = 500, w = 1500, padding = 25
+const h = 500, w = 1500, padding = 30
 
 async function loadData(url) {
   try {
@@ -27,7 +27,7 @@ async function scaleConstBar(){
 
     const colorScale = d3.scaleLinear()
     .domain([d3.max(data, (d) => {return d.population}),d3.min(data, (d) => {return d.population})])
-    .range([100,255])
+    .range([50,255])
 
     return {'data': data, 'xScale':null, 'yScale':yScale, 'colorScale': colorScale}
 }
@@ -60,19 +60,55 @@ async function drawBarChart(){
     const yScale = object.yScale
     const colorScale = object.colorScale
     const data = object.data
-    const width = 15
-    const middlePadding = 7
+    const width = 18
+    const middlePadding = 9.6
     const tooltip = d3.select(".container").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+        .attr("class", "tooltip")
+        .style("opacity", 0);
    
     console.log(data)
 
     let svg = d3.select(".container").append("div")
-    .attr("class", "barchart")
-    .append("svg")
-    .attr("height", h)
-    .attr("width", w)
+        .attr("class", "barchart")
+        .append("svg")
+        .attr("height", h)
+        .attr("width", w)
+
+        const xScaleForYears = d3.scaleBand()
+        .domain(data.map(d => d.year))
+        .range([padding, w - padding])
+        .padding(0.1);
+
+    const xAxis = d3.axisBottom(xScaleForYears);
+
+    svg.append("g")
+        .attr("class", "x-axis")
+        .attr("transform", `translate(0, ${h - padding})`)
+        .call(xAxis)
+        .attr("fill", "white");
+
+    svg.selectAll(".tick text") // Change the color of x-axis tick values to white
+        .attr("fill", "white");
+
+    // Create y-axis scale and axis
+    
+
+    const yScaleForPop = d3.scaleLinear()
+    .domain([0, d3.max(data, function(d) { return d.population; })]) // Reversed domain
+    .range([h - padding, padding]);
+
+    const yAxis = d3.axisLeft(yScaleForPop);
+
+    svg.append("g")
+        .attr("class", "y-axis")
+        .attr("transform", `translate(${padding}, 0)`)
+        .call(yAxis)
+        .attr("fill", "white");
+
+    svg.selectAll(".y-axis .tick text") // Change the color of y-axis tick values to white
+        .attr("fill", "white");
+    
+    
 
     let xLabel = svg.selectAll('xLabel').data(data).enter().append('text')
     let yLabel = svg.selectAll('yLabel').data(data).enter().append('text')
@@ -89,7 +125,7 @@ async function drawBarChart(){
     }).attr("y", (d) => {
         return h - yScale(d.population) - padding
     }).attr("x", (d, i) => {
-        return i * width + i * middlePadding + padding
+        return i * width + i * middlePadding + padding + 7
     })
     .attr("fill", (d) => {
         return "rgb(0,"+ colorScale(parseFloat(d.population)) + ",0)"
@@ -135,6 +171,8 @@ async function drawBarChart(){
     .attr("dy", "1em")
     .attr('transform', 'rotate(-90)')
     .style("fill", "white")
+
+    
     
     // svg.append("g")
     // .attr("class", "axis")
