@@ -53,3 +53,10 @@
 .navbar ul li:hover::after {
     width: 100%;
 }
+#buttonContainer {
+    padding: 50px 20px;
+}
+#chartContainer {
+    padding: 50px ;
+}
+
