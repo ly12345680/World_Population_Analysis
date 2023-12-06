@@ -56,11 +56,14 @@
 
   
   .sphere {
-    fill: #7676b9;
+    fill: #b1b1e2;
   }
   
   .country {
-    fill: lightgreen;
+    
     stroke: black;
-    stroke-opacity: 0.1;
+    stroke-width: 0.05;
   }
+.country:hover{
+    fill: red;
+}
