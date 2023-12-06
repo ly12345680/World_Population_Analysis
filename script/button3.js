@@ -109,7 +109,8 @@ async function drawBarChart(){
         .style("left", event.clientX + "px")
         .style("top", event.clientY - 28 + "px")
         .style("z", 5)
-        .style("background_color", "red");
+        .style("background_color", "red")
+        .style("color","white");
     })
     .on("mouseout", function () {
         d3.select(this)
@@ -126,12 +127,14 @@ async function drawBarChart(){
     xLabel.text("Year")
     .attr("x", w/3)
     .attr("y", h)
+    .style("fill", "white")
 
     yLabel.text('Population')
     .attr('x', -h/1.5)
     .attr('y', -3)
     .attr("dy", "1em")
     .attr('transform', 'rotate(-90)')
+    .style("fill", "white")
     
     // svg.append("g")
     // .attr("class", "axis")
