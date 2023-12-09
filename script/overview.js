@@ -21,7 +21,7 @@ function rowConvertor(row) {
       continent: row['Continent']
     };
   }
-  
+
 d3.csv(
   "../asset/data/world_population.csv", 
   rowConvertor
@@ -41,6 +41,7 @@ d3.csv(
     console.log(error);
   });
 
+// for the bar chart
 function createBarChart(data) {
     chartData = data;
 
@@ -247,3 +248,15 @@ function updateChart() {
   //     tooltip.style("opacity", 0);
   //   });
 }
+// end of bar chart part
+
+// for the pie chart
+var groupedData = d3.group(data, d => d["Continent"]);
+
+var continentPopulations = [];
+groupedData.forEach(function(continentData, continent) {
+  var totalPopulation = continentData.reduce(function(sum, d) {
+    return sum + parseInt(d["2022 Population"]);
+  }, 0);
+  continentPopulations.push({ continent: continent, population: totalPopulation });
+});
