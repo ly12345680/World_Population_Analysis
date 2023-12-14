@@ -31,9 +31,10 @@ Promise.all([
     accumulator[d.iso_n3] = d.name;
     return accumulator;
   }, {});
-
+  console.log(topoJSONdata);
   
   const countries = topojson.feature(topoJSONdata, topoJSONdata.objects.countries);
+  console.log(countries);
   countries.features.forEach(feature => {
     const countryData = csvData.find(d => d['Country/Territory'] === countryName[feature.id]);
     feature.properties.growthRate = countryData ? +countryData['Growth Rate'] : null;

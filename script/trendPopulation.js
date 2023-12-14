@@ -1,66 +1,64 @@
-// Prepare your data
-// function rowConverter(d) {
-//     // Retrieve all attributes of data
-//     return {
-//         ...d
-//     };
-// }
-
-
 Promise.all([
-    d3.csv('../asset/data/world_population.csv'),
-    d3.csv('../asset/data/world_population2.csv')
+  d3.csv("../asset/data/world_population.csv"),
+  d3.csv("../asset/data/world_population2.csv"),
 ]).then(([data1, data2]) => {
-    // console.log(data1);
-    // console.log(data2);
-    const svg = d3.select('#lineChart1')
-    
-    
-    // Define scales
-    const xScale = d3.scaleLinear()
-        .domain(d3.extent(data2, d => d['Year']))
-        .range([50, svg.attr('width') - 50]);
+  // console.log(data1);
+  // console.log(data2);
+  console.log(window.innerWidth);
+  const width = 1500;
+  const height = 800;
+  const padding = 50;
+  const svg = d3
+    .select("#lineChart1")
+    .attr("width", width)
+    .attr("height", height);
 
-    const yScale = d3.scaleLinear()
-        .domain(d3.extent(data2, d => d['Total Population']))
-        .range([window.innerHeight - 50, 50]);
+  // Define scales
+  const data3 = data1.forEach(d => console.log(Object.values(d).slice(3, 11)));
+  const xScale = d3
+    .scaleLinear()
+    .domain(d3.extent(data2, (d) => d["Year"]))
+    .range([0, width - padding * 4]);
+  // console.log(d3.extent(data2, (d) => d["Year"]));
+  const yScale = d3
+    .scaleLinear()
+    .domain(d3.extent(data2, (d) => d["Total Population"]))
+    .range([height - padding, 50]);
+  // console.log(d3.extent(data2, (d) => d["Total Population"]));
+  // Rest of the code...
 
-    // Rest of the code...
-    
-    // console.log(xScale.domain());
-    // console.log(yScale.domain());
-    svg.append('g')
-        .attr('transform', 'translate(0,0)')
-        .call(d3.axisBottom(xScale).ticks(data2.length));
-    svg.append('g')
-        .attr('transform', 'translate(50,0)')
-        .call(d3.axisLeft(yScale));
-})
+  // console.log(xScale.domain());
+  // console.log(yScale.domain());
+  svg
+    .append("g")
+    .attr(
+      "transform",
+      "translate(" + padding * 3 + "," + (svg.attr("height") - padding) + ")"
+    )
+    .call(d3.axisBottom(xScale).ticks(data2.length));
+  svg
+    .append("g")
+    .attr("transform", "translate(" + padding * 3 + ",0)")
+    .call(d3.axisLeft(yScale));
 
-
-
-
-
-// svg.append('g')
-//     .call(d3.axisBottom(xScale).ticks(data.length));
-// // Define the line generator
-// const line = d3.line()
-//     .x(d => xScale(d.year))
-//     .y(d => yScale(d.population));
-
-// // Draw the line
-// svg.append('path')
-//     .datum(data)
-//     .attr('fill', 'none')
-//     .attr('stroke', 'steelblue')
-//     .attr('stroke-width', 1.5)
-//     .attr('d', line);
-
-// // Draw the axes
-// svg.append('g')
-//     .attr('transform', 'translate(0,250)')
-//     .call(d3.axisBottom(xScale).ticks(data.length));
-
-// svg.append('g')
-//     .attr('transform', 'translate(50,0)')
-//     .call(d3.axisLeft(yScale));
+  var lines = svg
+    .selectAll(".line")
+    .data(data2)
+    .join("path")
+    .attr("fill", "none")
+    .attr("stroke", function (d) {
+      return color(d[0]);
+    })
+    .attr("stroke-width", 2)
+    .attr("d", function (d) {
+      return d3
+        .line()
+        .x(function (d) {
+          return xScale(d["Year"]);
+        })
+        .y(function (d) {
+          return yScale(d["Total Population"]);
+        });
+    })
+    .attr("transform", "translate(100, " + padding + ")");
+});
