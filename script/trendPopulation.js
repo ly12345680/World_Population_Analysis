@@ -1,10 +1,18 @@
 Promise.all([
   d3.csv("../asset/data/world_population.csv"),
   d3.csv("../asset/data/world_population2.csv"),
-]).then(([data1, data2]) => {
+  d3.csv("../asset/data/Map/new_dataset.csv")
+]).then(([data1, data2, data3]) => {
   // console.log(data1);
   // console.log(data2);
-  console.log(window.innerWidth);
+  console.log(data3);
+  
+  var nestedData = d3.nest()
+    .key(function(d) { return d['Country/Territory']; })
+    .entries(data3);
+  console.log(nestedData);
+  
+  // console.log(window.innerWidth);
   const width = 1500;
   const height = 800;
   const padding = 50;
@@ -14,7 +22,7 @@ Promise.all([
     .attr("height", height);
 
   // Define scales
-  const data3 = data1.forEach(d => console.log(Object.values(d).slice(3, 11)));
+  // const data4 = data1.forEach(d => console.log(Object.values(d).slice(3, 11)));
   const xScale = d3
     .scaleLinear()
     .domain(d3.extent(data2, (d) => d["Year"]))
