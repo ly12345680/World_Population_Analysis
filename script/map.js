@@ -112,7 +112,7 @@ function displayLineChart() {
   Promise.all([
     d3.csv("../asset/data/world_population.csv"),
     d3.csv("../asset/data/world_population2.csv"),
-    d3.csv("../asset/data/Map/new_dataset2.csv"),
+    d3.csv("../asset/data/Map/new_dataset.csv"),
   ]).then(([data1, data2, data3]) => {
     // console.log(data1);
     // console.log(data2);
@@ -265,6 +265,7 @@ function displayLineChart() {
       .style("fill", "yellow");
   });
 }
+// ----------------------------- Back to Map --------------------------------
 function displayMap() {
   div1.style("display", "block");
   div2.style("display", "none");
