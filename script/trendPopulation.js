@@ -1,17 +1,22 @@
 Promise.all([
   d3.csv("../asset/data/world_population.csv"),
   d3.csv("../asset/data/world_population2.csv"),
-  d3.csv("../asset/data/Map/new_dataset.csv")
+  d3.csv("../asset/data/Map/new_dataset.csv"),
 ]).then(([data1, data2, data3]) => {
   // console.log(data1);
   // console.log(data2);
   console.log(data3);
-  
-  var nestedData = d3.nest()
-    .key(function(d) { return d['Country/Territory']; })
+
+  var nestedData = d3
+    .nest()
+    .key(function (d) {
+      return d["Country/Territory"];
+    })
     .entries(data3);
-  console.log(nestedData);
-  
+  var country = nestedData.find((d) => d.key === "Afghanistan");
+
+  console.log(country);
+
   // console.log(window.innerWidth);
   const width = 1500;
   const height = 800;
@@ -25,12 +30,12 @@ Promise.all([
   // const data4 = data1.forEach(d => console.log(Object.values(d).slice(3, 11)));
   const xScale = d3
     .scaleLinear()
-    .domain(d3.extent(data2, (d) => d["Year"]))
+    .domain(d3.extent(country.values, (d) => d["Year"]))
     .range([0, width - padding * 4]);
   // console.log(d3.extent(data2, (d) => d["Year"]));
   const yScale = d3
     .scaleLinear()
-    .domain(d3.extent(data2, (d) => d["Total Population"]))
+    .domain(d3.extent(country.values, (d) => d["Population"]))
     .range([height - padding, 50]);
   // console.log(d3.extent(data2, (d) => d["Total Population"]));
   // Rest of the code...
@@ -49,24 +54,18 @@ Promise.all([
     .attr("transform", "translate(" + padding * 3 + ",0)")
     .call(d3.axisLeft(yScale));
 
+  // Create the line generator outside
+  var lineGenerator = d3.line()
+    .x(function(d) { return xScale(d["Year"]); })
+    .y(function(d) { return yScale(d["Population"]); });
+
   var lines = svg
     .selectAll(".line")
-    .data(data2)
-    .join("path")
-    .attr("fill", "none")
-    .attr("stroke", function (d) {
-      return color(d[0]);
-    })
+    .data(country.values)
+    .enter()
+    .append("path")
+    .attr("stroke", "steelblue")
     .attr("stroke-width", 2)
-    .attr("d", function (d) {
-      return d3
-        .line()
-        .x(function (d) {
-          return xScale(d["Year"]);
-        })
-        .y(function (d) {
-          return yScale(d["Total Population"]);
-        });
-    })
+    .attr("d", lineGenerator) // Call the line generator with the data
     .attr("transform", "translate(100, " + padding + ")");
 });
