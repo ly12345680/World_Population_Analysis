@@ -68,6 +68,7 @@ Promise.all([
     countries.features,
     (d) => d.properties.growthRate
   );
+  console.log(maxGrowthRate);
   const colorScale = d3
     .scaleLinear()
     .domain(maxGrowthRate)
@@ -111,7 +112,7 @@ function displayLineChart() {
   Promise.all([
     d3.csv("../asset/data/world_population.csv"),
     d3.csv("../asset/data/world_population2.csv"),
-    d3.csv("../asset/data/Map/new_dataset.csv"),
+    d3.csv("../asset/data/Map/new_dataset2.csv"),
   ]).then(([data1, data2, data3]) => {
     // console.log(data1);
     // console.log(data2);
