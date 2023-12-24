@@ -8,6 +8,7 @@ const chartHeight = 400;
 const margin = { top: 50, right: 20, bottom: 60, left: 100 };
 const width = chartWidth - margin.left - margin.right;
 const height = chartHeight - margin.top - margin.bottom;
+
 const tooltip = d3.select("body").append("div")
   .attr("class", "tooltip")
   .style("opacity", 0);
@@ -217,7 +218,7 @@ function createPieChart(data) {
 
   arcs.append("path")
     .attr("d", arc)
-    .attr("fill", (d, i) => colorScale(i));
+    .attr("fill", (d, i) => colorScale(d.data.continent));
 
   const legend = pieChart.selectAll(".legend")
     .data(data)
@@ -231,7 +232,7 @@ function createPieChart(data) {
     .attr("y", 0)
     .attr("width", 15)
     .attr("height", 15)
-    .attr("fill", (d, i) => colorScale(i));
+    .attr("fill", (d, i) => colorScale(d.continent));
 
   legend.append("text")
     .attr("x", 20)
@@ -241,3 +242,211 @@ function createPieChart(data) {
     .text(d => `${d.continent}: ${d.percentage.toFixed(2)}%`);
 }
 /* ************* end of pie chart part ************* */
+
+/* ************* for the bar chart part ************* */
+function rowConvertor2(row) {
+  return {
+    country: row['Country/Territory'],
+    population: +row['Population'],
+    continent: row['Continent'],
+    year: row['Year']
+  };
+}
+d3.csv(
+  "../asset/data/map/new_dataset.csv", 
+  rowConvertor2
+  ).then(data2 => {
+    const groupedData = d3.group(data2, d => d.continent, d => d.year);
+
+    const populationByContinent = new Map();
+
+    groupedData.forEach((continentData, continent) => {
+      const populationByYear = new Map();
+
+      continentData.forEach((yearData, year) => {
+        const totalPopulation = d3.sum(yearData, d => d.population);
+        populationByYear.set(year, totalPopulation);
+      });
+
+      populationByContinent.set(continent, populationByYear);
+    });
+
+    populationByContinent.forEach((populationByYear, continent) => {
+      console.log(`Continent: ${continent}`);
+
+      populationByYear.forEach((population, year) => {
+        console.log(`Year:${year}, Population:${population}`);
+      });
+    })
+
+    createLineChart(populationByContinent);
+  }).catch((error) => {
+    console.log(error);
+  });
+
+  function createLineChart(populationByContinent) {
+
+  const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
+  // Create an SVG
+  const svg = d3.select("#lineChart")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+  // Extract unique years from the populationByContinent data
+  const years = Array.from(
+    new Set(
+      Array.from(populationByContinent.values()).flatMap((map) =>
+        Array.from(map.keys())
+      )
+    )
+  );
+
+  // Scales for x and y axes
+  const xScale = d3
+    .scalePoint()
+    .domain(years)
+    .range([width, 0])
+    .padding(0);
+
+  const yScale = d3
+    .scaleLinear()
+    .domain([
+      0,
+      d3.max(
+        Array.from(populationByContinent.values()).flatMap((map) =>
+          Array.from(map.values())
+        )
+      ),
+    ])
+    .range([height, 0]);
+
+  // Define the line
+  const line = d3
+    .line()
+    .x((d) => xScale(d.year))
+    .y((d) => yScale(d.population));
+
+  populationByContinent.forEach((populationByYear, continent) => {
+    // Convert the populationByYear map to an array of objects
+    const data = Array.from(populationByYear, ([year, population]) => ({
+      year,
+      population,
+    }));
+
+    // Append a path element for the line chart
+    svg
+      .append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", (d, i) => colorScale(continent))
+      .attr("stroke-width", 2)
+      .attr("d", line);
+  });
+
+  // Add x-axis và y-axis
+  svg
+    .append("g")
+    .attr("transform", `translate(0, ${height})`)
+    .call(d3.axisBottom(xScale))
+    .attr("fill", "white")
+    .selectAll("text")
+    .style("text-anchor", "middle")
+    .style("fill", "#fff");
+
+  svg.append("g").call(d3.axisLeft(yScale)).attr("fill", "white")
+    .selectAll("text")
+    .style("text-anchor", "end")
+    .style("fill", "#fff");
+  
+  //   const svg = d3.select("#lineChart")
+  //     .append("svg")
+  //     .attr("width", chartWidth)
+  //     .attr("height", chartHeight)
+  //     .append("g")
+  //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  
+  //   // Add name of chart
+  //   svg.append("text")
+  //     .attr("class", "Chart-title")
+  //     .attr("x", width/2 - 150)
+  //     .attr("y", -30)
+  //     .style("font-weight", "bold")
+  //     .style("fill", "white")
+  //     .text("Six continents from 1970 to  2022");
+
+  //   const xScale = d3.scaleLinear()
+  //     .domain(d3.extent(Array.from(populationByContinent.values(), d => Array.from(d.keys())).flat()))
+  //     .range([0, width]);
+  
+  
+  //   const yScale = d3.scaleLinear()
+  //     .domain([0, d3.max(Array.from(populationByContinent.values(), d => d3.max(Array.from(d.values()))))])
+  //     .range([height, 0]);
+    
+  
+  
+  //     const line = d3.line()
+  //     .x((d, i) => xScale(Array.from(populationByContinent.values(), d => Array.from(d.keys())[i])))
+  //     .y((d, i) => yScale(d));
+  
+  
+  //   svg.append("g")
+  //     .attr("transform", "translate(0," + height + ")")
+  //     .call(d3.axisBottom(xScale).tickFormat(d3.format("d")))
+  //     .style("fill", "#fff")
+  //     .selectAll("text")
+  //     .style("text-anchor", "middle")
+  //     .style("fill", "#fff");
+  
+  //   svg.append("g")
+  //     .call(d3.axisLeft(yScale))
+  //     .style("fill", "#fff")
+  //     .selectAll("text")
+  //     .style("text-anchor", "end")
+  //     .style("fill", "#fff");
+  // // Add the lines
+  // let i = 0;
+  // populationByContinent.forEach((populationByYear, continent) => {
+  //   const continentData = Array.from(populationByYear.values());
+  //   svg
+  //     .append("path")
+  //     .datum(continentData)
+  //     .attr("class", "line")
+  //     .attr("d", line)
+  //     .style("stroke", colorScale(i))
+  //     .style("fill", "none");
+  //   i++;
+  // });
+  //   svg.append("text")
+  //     .attr("transform", "rotate(-90)")
+  //     .attr("y", 0 - margin.left)
+  //     .attr("x", 0 - (height / 2))
+  //     .attr("dy", "1em")
+  //     .style("text-anchor", "middle")
+  //     .style("fill", "#fff")
+  //     .text("Population");
+  
+  //   svg.append("text")
+  //     .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.top + 10) + ")")
+  //     .style("text-anchor", "middle")
+  //     .style("fill", "#fff")
+  //     .text("Year");
+  
+  //   svg.selectAll(".line")
+  //     .data(Array.from(populationByContinent.values()))
+  //     .enter()
+  //     .append("path")
+  //     .attr("class", "line")
+  //     .attr("d", d => line(Array.from(d.values())))
+  //     .attr("fill", (d, i) => colorScale(i))
+  //     .style("fill", "none")
+  //     .style("stroke-width", 2);
+
+    
+  }
+
+/* ************* end of line chart part ************* */
