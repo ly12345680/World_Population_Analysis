@@ -239,27 +239,7 @@ async function drawLineChart(){
                 .duration(500)
                 .style("opacity", 0);
         });
-
-        const yAxisForNoSmoothing = d3.axisRight(yScale);
-
-        svg.append("g")
-            .attr("class", "y-axis-no-smoothing")
-            .attr("transform", `translate(${padding}, 0)`)
-            .call(yAxisForNoSmoothing)
-            .attr("fill", "white");
-    
-        svg.selectAll(".y-axis-no-smoothing .tick text") 
-            .attr("fill", "white");
-    
-        
-        svg.append("text")
-            .attr("transform", `translate(${w - padding}, ${h / 2}) rotate(-90)`)
-            .attr("dy", "1em")
-            .style("text-anchor", "middle")
-            .style("fill", "white")
-            .text("No_Smoothing");
     }
-
 // Call the function to draw the line chart
 drawLineChart();
 
