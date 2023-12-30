@@ -27,7 +27,7 @@ async function scaleConstBar(){
 
     const colorScale = d3.scaleLinear()
     .domain([d3.max(data, (d) => {return d.population}),d3.min(data, (d) => {return d.population})])
-    .range([50,255])
+    .range([150,255])
 
     return {'data': data, 'xScale':null, 'yScale':yScale, 'colorScale': colorScale}
 }
@@ -113,7 +113,7 @@ async function drawBarChart(){
         d3.select(this)
         .attr("fill", (d) => {
             // Adjust brightness or color for glowing effect
-            return "rgb(255," + (colorScale(parseFloat(d.population))) + ",0)";
+            return "rgb(50," + (colorScale(parseFloat(d.population))) + ",0)";
         });
 
     tooltip.transition()
@@ -240,9 +240,95 @@ async function drawLineChart(){
                 .style("opacity", 0);
         });
     }
-// Call the function to draw the line chart
-drawLineChart();
 
+drawLineChart()
+
+        async function scaleConstLine1(){
+            const dataRaw = await loadData('../asset/data/Global_annual_mean_temp.csv')
+            let data = []
+
+            console.log(dataRaw)//test to check data
+
+            for(let i = 0; i < dataRaw.length-1; i++){
+                data.push({"year": +dataRaw[i]["Year"], "lowess": +dataRaw[i]["Lowess(5)"]})
+
+            }
+            
+            const xScale = d3.scaleLinear()
+                .domain([d3.min(data, d => d.year), d3.max(data, d => d.year)])
+                .range([padding, w - padding]);
+
+            const yScale = d3.scaleLinear()
+                .domain([d3.min(data, d => d.lowess), d3.max(data, d => d.lowess)])
+                .range([h - padding - 200, padding + 30]);
+
+            const colorScale = d3.scaleLinear()
+                .domain([d3.min(data, d => d.lowess), d3.max(data, d => d.lowess)])
+                .range([0, 255]);
+
+            return {'data': data, 'xScale': xScale, 'yScale': yScale, 'colorScale': colorScale};
+        }
+
+        async function drawLineChart1(){
+            const object = await scaleConstLine1();
+            const yScale = object.yScale;
+            const colorScale = object.colorScale;
+            const data = object.data;
+            const tooltip = d3.select(".container").append("div")
+                .attr("class", "tooltip")
+                .style("opacity", 0);
+
+            let svg = d3.select("svg")
+
+            const xScale = d3.scaleBand()
+                .domain(data.map(d => d.year))
+                .range([padding, w - padding])
+                .padding(0.1);
+
+            const line = d3.line()
+                .x(d => xScale(d.year) + 13)
+                .y(d => yScale(d.lowess) - 30);
+
+            svg.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", "orange") // Adjust color as needed
+                .attr("stroke-width", 2)
+                .attr("d", line);
+
+            svg.selectAll(".dot")
+                .data(data)
+                .enter().append("circle")
+                .attr("class", "dot")
+                .attr("cx", d => xScale(d.year) + 13)
+                .attr("cy", d => yScale(d.lowess) - 30)
+                .attr("r", 4)
+                .attr("fill", "orange") // Adjust color as needed
+
+                .on("mouseover", function (event, d) {
+                    d3.select(this).attr("r", 6); // Enlarge the dot on hover
+
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", 0.9);
+                    tooltip.html(`<strong>Year:</strong> ${d.year}<br/><strong>Lowess:</strong> ${d.lowess}`)
+                        .style("left", event.clientX + "px")
+                        .style("top", event.clientY - 28 + "px")
+                        .style("z", 5)
+                        .style("background_color", "red")
+                        .style("color", "white");
+                })
+
+                .on("mouseout", function () {
+                    d3.select(this).attr("r", 4); // Revert dot size on mouseout
+
+                    tooltip.transition()
+                        .duration(500)
+                        .style("opacity", 0);
+                });
+            }
+        // Call the function to draw the line chart
+        drawLineChart1();
   
 
 
