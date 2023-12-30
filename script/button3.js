@@ -287,7 +287,7 @@ drawLineChart()
 
             const line = d3.line()
                 .x(d => xScale(d.year) + 13)
-                .y(d => yScale(d.lowess) - 30);
+                .y(d => yScale(d.lowess) - 50);
 
             svg.append("path")
                 .datum(data)
@@ -296,12 +296,12 @@ drawLineChart()
                 .attr("stroke-width", 2)
                 .attr("d", line);
 
-            svg.selectAll(".dot")
+            svg.selectAll(".dot1")
                 .data(data)
                 .enter().append("circle")
                 .attr("class", "dot")
                 .attr("cx", d => xScale(d.year) + 13)
-                .attr("cy", d => yScale(d.lowess) - 30)
+                .attr("cy", d => yScale(d.lowess) - 50)
                 .attr("r", 4)
                 .attr("fill", "orange") // Adjust color as needed
 
