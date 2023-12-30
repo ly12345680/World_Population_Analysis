@@ -157,7 +157,7 @@ async function drawBarChart(){
     // .attr("transform", "translate(" + 20 + "," + (h) + ")")
     // .call(xAxis = d3.axisBottom().scale(xScale));
 }
-drawBarChart()
+
 
 
 async function scaleConstLine(){
@@ -200,7 +200,7 @@ async function drawLineChart(){
 
     const line = d3.line()
         .x(d => xScale(d.year) + 13)
-        .y(d => yScale(d.no_smoothing) - 30);
+        .y(d => yScale(d.no_smoothing) + 5);
 
     svg.append("path")
         .datum(data)
@@ -214,7 +214,7 @@ async function drawLineChart(){
         .enter().append("circle")
         .attr("class", "dot")
         .attr("cx", d => xScale(d.year) + 13)
-        .attr("cy", d => yScale(d.no_smoothing) - 30)
+        .attr("cy", d => yScale(d.no_smoothing) +5)
         .attr("r", 4)
         .attr("fill", "red") // Adjust color as needed
 
@@ -241,7 +241,7 @@ async function drawLineChart(){
         });
     }
 
-drawLineChart()
+
 
         async function scaleConstLine1(){
             const dataRaw = await loadData('../asset/data/Global_annual_mean_temp.csv')
@@ -328,7 +328,14 @@ drawLineChart()
                 });
             }
         // Call the function to draw the line chart
-        drawLineChart1();
+       
+
+        async function Drawchart(){
+            drawBarChart()
+            drawLineChart()
+            drawLineChart1()
+}
+Drawchart()
   
 
 
