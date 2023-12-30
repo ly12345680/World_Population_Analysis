@@ -2,8 +2,8 @@ var chartData = [];
 var svg;
 
 const barChart = d3.select("#barChart");
-const chartWidth = 700;
-const chartHeight = 400;
+const chartWidth = 750;
+const chartHeight = 500;
 
 const margin = { top: 50, right: 20, bottom: 60, left: 100 };
 const width = chartWidth - margin.left - margin.right;
@@ -85,7 +85,7 @@ function createBarChart(data) {
       .range([height, 0]);
   
     svg.append("g")
-      .attr("transform", `translate(0, ${height})`)
+      .attr("transform",  `translate(0, ${height})`)
       .call(d3.axisBottom(xScale))
       .style("fill", "white")
       .selectAll("text")
@@ -97,24 +97,46 @@ function createBarChart(data) {
       .call(d3.axisLeft(yScale))
       .style("fill", "white")
       .style("stroke", "white");
-  
-    // Draw vertical bars with colorScale
+
+    // Append a text element for the x-axis name
+    svg.append("text")
+      .attr("class", "axis-label")
+      .attr("x", width / 2)
+      .attr("y", height + margin.bottom - 5 )
+      .attr("text-anchor", "middle")
+      .text("Country")
+      .style("fill", "white");
+
+    // Append a text element for the y-axis name
+    svg.append("text")
+      .attr("class", "axis-label")
+      .attr("y", - margin.left +13 )
+      .attr("x", - height / 2)
+      .attr("text-anchor", "middle")
+      .attr("transform", "rotate(-90)")
+      .text("Population")
+      .style("fill", "white");
+
+      // Draw vertical bars with colorScale
     svg.selectAll(".bar")
       .data(data)
       .enter().append("rect")
       .attr("class", "bar")
       .attr("x", d => xScale(d.country))
       .attr("width", xScale.bandwidth())
-      .attr("y", d => yScale(d.population))
-      .attr("height", d => height - yScale(d.population))
+      .attr("y", yScale(20))
+      .attr("height", 0)
       .style("fill", d => colorScale(d.population))
       .on("mouseover", (event, d) => {
         d3.select(event.currentTarget)
           .style("fill", d => colorScale2(d.population));
+
+          const formattedPopulation = d.population.toLocaleString();
+
         // Show tooltip on mouseover
         tooltip
           .style("opacity", 1)
-          .html(`Country: ${d.country}<br>Population: ${d.population}`)
+          .html(`Country: ${d.country}<br>Population: ${formattedPopulation}`)
           .style("left", event.pageX + "px")
           .style("top", event.pageY + "px");
       })
@@ -123,7 +145,11 @@ function createBarChart(data) {
           .style("fill", d => colorScale(d.population));
         // Hide tooltip on mouseout
         tooltip.style("opacity", 0);
-      });
+      })
+      .transition() // Add transition animation
+    .duration(2000) // Set the duration of the animation (in milliseconds)
+    .attr("y", d => yScale(d.population)) // Animate the bars to their final height
+    .attr("height", d => height - yScale(d.population)); // Animate the bars to their final height;
 
     
 } // end function createBarChart
@@ -213,12 +239,20 @@ function createPieChart(data) {
     .enter()
     .append("g")
     .attr("class", "arc")
-    .attr("stroke", "black")
+    .attr("stroke", "white")
     //.attr("stroke-width", 1.5);
 
   arcs.append("path")
     .attr("d", arc)
-    .attr("fill", (d, i) => colorScale(d.data.continent));
+    .attr("fill", (d, i) => colorScale(d.data.continent))
+    .transition() // animation
+    .duration(2000) // time for animation (in milliseconds)
+    .attrTween("d", function (d) {
+      const interpolate = d3.interpolate({ startAngle: 0, endAngle: 0 }, d);
+      return function (t) {
+        return arc(interpolate(t));
+      };
+    });
 
   const legend = pieChart.selectAll(".legend")
     .data(data)
@@ -284,17 +318,16 @@ d3.csv(
     console.log(error);
   });
 
-  function createLineChart(populationByContinent) {
+function createLineChart(populationByContinent) {
 
   const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-  // Create an SVG
   const svg = d3.select("#lineChart")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    .attr("transform", `translate(${margin.left + 50}, ${margin.top})`);
 
   // Extract unique years from the populationByContinent data
   const years = Array.from(
@@ -305,15 +338,13 @@ d3.csv(
     )
   );
 
-  // Scales for x and y axes
-  const xScale = d3
-    .scalePoint()
+  // Scales for x and y
+  const xScale = d3.scalePoint()
     .domain(years)
     .range([width, 0])
     .padding(0);
 
-  const yScale = d3
-    .scaleLinear()
+  const yScale = d3.scaleLinear()
     .domain([
       0,
       d3.max(
@@ -325,10 +356,45 @@ d3.csv(
     .range([height, 0]);
 
   // Define the line
-  const line = d3
-    .line()
+  const line = d3.line()
     .x((d) => xScale(d.year))
     .y((d) => yScale(d.population));
+
+  // Append the chart name
+  svg.append("text")
+    .attr("class", "chart-title")
+    .attr("x", width / 2)
+    .attr("y", -margin.top / 2)
+    .attr("text-anchor", "middle")
+    .text("Population by Continent 1970 - 2022")
+    .style("font-weight", "bold")
+    .style("fill", "white");
+
+    // Append a text element for the x-axis name
+  svg.append("text")
+    .attr("class", "axis-label")
+    .attr("x", width / 2)
+    .attr("y", height + margin.bottom - 10)
+    .attr("text-anchor", "middle")
+    .text("Year")
+    .style("fill", "white");
+
+  // Append a text element for the y-axis name
+  svg.append("text")
+    .attr("class", "axis-label")
+    .attr("y", - margin.left + 10)
+    .attr("x", - height / 2)
+    .attr("text-anchor", "middle")
+    .attr("transform", "rotate(-90)")
+    .text("Population")
+    .style("fill", "white");
+
+  // Create a tooltip element
+  // const tooltip = d3
+  //   .select("#lineChart")
+  //   .append("div")
+  //   .attr("class", "tooltip")
+  //   .style("opacity", 0);
 
   populationByContinent.forEach((populationByYear, continent) => {
     // Convert the populationByYear map to an array of objects
@@ -338,18 +404,33 @@ d3.csv(
     }));
 
     // Append a path element for the line chart
-    svg
-      .append("path")
+    svg.append("path")
       .datum(data)
       .attr("fill", "none")
-      .attr("stroke", (d, i) => colorScale(continent))
-      .attr("stroke-width", 2)
-      .attr("d", line);
+      .attr("stroke", colorScale(continent))
+      .attr("stroke-width", 3)
+      .attr("d", line)
+      .on("mouseover", (event, d) => {
+        d3.select(event.currentTarget).attr("stroke-width", 5); 
+      tooltip
+        .transition()
+        .duration(200)
+        .style("opacity", 0.9);
+      tooltip
+        .html(
+          `<strong>${continent}</strong><br/>Year: ${d.year}<br/>Population: ${d.population}`
+        )
+        .style("left", event.pageX + "px")
+        .style("top", event.pageY + "px");
+    })
+    .on("mouseout", function (d) {
+      d3.select(this).attr("stroke-width", 3); // Reset stroke width on mouseout
+      tooltip.transition().duration(500).style("opacity", 0);
+    });
   });
 
   // Add x-axis và y-axis
-  svg
-    .append("g")
+  svg.append("g")
     .attr("transform", `translate(0, ${height})`)
     .call(d3.axisBottom(xScale))
     .attr("fill", "white")
@@ -361,92 +442,7 @@ d3.csv(
     .selectAll("text")
     .style("text-anchor", "end")
     .style("fill", "#fff");
-  
-  //   const svg = d3.select("#lineChart")
-  //     .append("svg")
-  //     .attr("width", chartWidth)
-  //     .attr("height", chartHeight)
-  //     .append("g")
-  //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-  
-  //   // Add name of chart
-  //   svg.append("text")
-  //     .attr("class", "Chart-title")
-  //     .attr("x", width/2 - 150)
-  //     .attr("y", -30)
-  //     .style("font-weight", "bold")
-  //     .style("fill", "white")
-  //     .text("Six continents from 1970 to  2022");
-
-  //   const xScale = d3.scaleLinear()
-  //     .domain(d3.extent(Array.from(populationByContinent.values(), d => Array.from(d.keys())).flat()))
-  //     .range([0, width]);
-  
-  
-  //   const yScale = d3.scaleLinear()
-  //     .domain([0, d3.max(Array.from(populationByContinent.values(), d => d3.max(Array.from(d.values()))))])
-  //     .range([height, 0]);
-    
-  
-  
-  //     const line = d3.line()
-  //     .x((d, i) => xScale(Array.from(populationByContinent.values(), d => Array.from(d.keys())[i])))
-  //     .y((d, i) => yScale(d));
-  
-  
-  //   svg.append("g")
-  //     .attr("transform", "translate(0," + height + ")")
-  //     .call(d3.axisBottom(xScale).tickFormat(d3.format("d")))
-  //     .style("fill", "#fff")
-  //     .selectAll("text")
-  //     .style("text-anchor", "middle")
-  //     .style("fill", "#fff");
-  
-  //   svg.append("g")
-  //     .call(d3.axisLeft(yScale))
-  //     .style("fill", "#fff")
-  //     .selectAll("text")
-  //     .style("text-anchor", "end")
-  //     .style("fill", "#fff");
-  // // Add the lines
-  // let i = 0;
-  // populationByContinent.forEach((populationByYear, continent) => {
-  //   const continentData = Array.from(populationByYear.values());
-  //   svg
-  //     .append("path")
-  //     .datum(continentData)
-  //     .attr("class", "line")
-  //     .attr("d", line)
-  //     .style("stroke", colorScale(i))
-  //     .style("fill", "none");
-  //   i++;
-  // });
-  //   svg.append("text")
-  //     .attr("transform", "rotate(-90)")
-  //     .attr("y", 0 - margin.left)
-  //     .attr("x", 0 - (height / 2))
-  //     .attr("dy", "1em")
-  //     .style("text-anchor", "middle")
-  //     .style("fill", "#fff")
-  //     .text("Population");
-  
-  //   svg.append("text")
-  //     .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.top + 10) + ")")
-  //     .style("text-anchor", "middle")
-  //     .style("fill", "#fff")
-  //     .text("Year");
-  
-  //   svg.selectAll(".line")
-  //     .data(Array.from(populationByContinent.values()))
-  //     .enter()
-  //     .append("path")
-  //     .attr("class", "line")
-  //     .attr("d", d => line(Array.from(d.values())))
-  //     .attr("fill", (d, i) => colorScale(i))
-  //     .style("fill", "none")
-  //     .style("stroke-width", 2);
-
-    
-  }
+   
+}
 
 /* ************* end of line chart part ************* */
