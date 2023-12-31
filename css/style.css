@@ -141,7 +141,8 @@ section {
 .Exploration h1 {
     font-size: 3em;
     font-weight: 900;
-    margin-bottom: 10px;   
+    margin-bottom: 10px; 
+    text-align: center;  
 }
 .Exploration ul {
     display: flex;
@@ -163,7 +164,8 @@ section {
     height: 40px;
     width: 130px;
     color: aqua;
-    background-color: #fff;
+    border-radius: 10px;
+    background: linear-gradient(to left, rgb(110, 200, 236), rgb(238, 224, 144));
 }
 /* button2 */
 .box {
@@ -173,6 +175,7 @@ section {
     font-size: 3em;
     font-weight: 900;
     margin-bottom: 10px;
+    text-align: center;
 
 }
 .box ul {
@@ -192,8 +195,9 @@ section {
     padding: 5px 10px;
     height: 40px;
     width: 130px;
-    color: aqua;
-    background-color: #fff;
+    fill: #fff;
+    border-radius: 10px;
+    background: linear-gradient(to left, rgb(110, 200, 236), rgb(238, 224, 144));
 }
 /* button3 */
 .ANNUAL {
@@ -204,7 +208,7 @@ section {
     font-size: 3em;
     font-weight: 900;
     margin-bottom: 10px;
-
+    text-align: center;
 }
 .ANNUAL ul {
     display: flex;
@@ -226,5 +230,6 @@ section {
     height: 40px;
     width: 130px;
     color: aqua;
-    background-color: #fff;
+    border-radius: 10px;
+    background: linear-gradient(to left,rgb(110, 200, 236),rgb(238, 224, 144));
 }
