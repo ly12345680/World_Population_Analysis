@@ -10,7 +10,6 @@
     background-image: linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.75)),url(../asset/image/background.jpg);
     background-size: cover;
     background-position: center;
-
 }
 .navbar{
     width: 85%;
@@ -19,6 +18,7 @@
     display: flex;
     align-self: center;
     justify-content: space-between;
+    /* border: 1px solid #ccc; */
 
 }
 .name{
@@ -27,6 +27,7 @@
     cursor: pointer;
     margin-left: -10px;
     margin-top: -10px;
+    /* border: 1px solid #ccc ; */
 }
 .navbar ul li{
     list-style: none;
@@ -51,4 +52,70 @@
 }
 .navbar ul li:hover::after{
     width: 100%;
+}
+.content{
+    width: 85%;
+    margin: auto;
+    padding: 0px 0px;
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    /* border: 1px solid red; */
+}
+.groupMember {
+    margin: 0;
+    padding: 0px 100px;
+    width: 50%;
+    text-align: center;
+    /* border: 1px solid #fff   */
+}
+
+.groupMember h1 {
+    color: aliceblue;
+    margin: auto;
+}
+
+.groupMember ul {
+    list-style: none;
+    padding: 0;
+}
+
+.groupMember li {
+    color: aliceblue;
+    margin: 10px 0; 
+}
+section {
+    height: 55%;
+    width: 85%;
+    margin: auto;
+    padding: 10px 0;
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    /* border: 1px solid yellow;  */
+}
+.home .script{
+    z-index: 888;
+    color: #fff;
+    width: 70%;
+    padding: 0px 250px;
+    margin-top: 0;
+}
+.home .script h1{
+    font-size: 3em;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    line-height: 75px;
+    margin-bottom: 20px;
+}
+.home .script h1 span{
+    font-size: 1.2em;
+    font-weight: 600;
+}
+.home .script p{
+    width: 100%;
+    margin-bottom: 65px;
+    font-size: 1.2em;
+    border: #fff 1px solid;
 }
