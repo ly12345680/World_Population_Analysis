@@ -125,6 +125,7 @@ async function drawBarChart(){
         .style("background_color", "red")
         .style("color","white");
     })
+
     .on("mouseout", function () {
         d3.select(this)
         .attr("fill", (d) => {
@@ -217,6 +218,8 @@ async function drawLineChart(){
         .attr("r", 4)
         .attr("fill", "red") // Adjust color as needed
 
+    
+
         .on("mouseover", function (event, d) {
             d3.select(this).attr("r", 6); // Enlarge the dot on hover
 
@@ -237,10 +240,15 @@ async function drawLineChart(){
             tooltip.transition()
                 .duration(500)
                 .style("opacity", 0);
-        });
+        })
+        svg.append("text")
+            .attr("x", w - 1000)
+            .attr("y", padding + 40)
+            .text("Temperature with no smoothing")
+            .attr("fill", "red")
+            .style("font-size", "20px");
+    
     }
-
-
 
         async function scaleConstLine1(){
             const dataRaw = await loadData('../asset/data/Global_annual_mean_temp.csv')
@@ -304,6 +312,8 @@ async function drawLineChart(){
                 .attr("r", 4)
                 .attr("fill", "orange") // Adjust color as needed
 
+
+
                 .on("mouseover", function (event, d) {
                     d3.select(this).attr("r", 6); // Enlarge the dot on hover
 
@@ -324,7 +334,13 @@ async function drawLineChart(){
                     tooltip.transition()
                         .duration(500)
                         .style("opacity", 0);
-                });
+                })
+                svg.append("text")
+                    .attr("x", w - 1000)
+                    .attr("y", padding )
+                    .text("Temperature with Lowess smoothing")
+                    .attr("fill", "orange")
+                    .style("font-size", "20px");
             }
         // Call the function to draw the line chart
        
