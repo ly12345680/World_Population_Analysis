@@ -107,8 +107,7 @@ async function drawBarChart(){
     })
     .attr("fill", (d) => {
         return `rgb(${colorScale(parseFloat(d.population))},${colorScale(parseFloat(d.population))}, ${colorScale(parseFloat(d.population))})`
-    })
-
+    })    
     .on("mouseover", function (event, d) {
         d3.select(this)
         .attr("fill", (d) => {
@@ -143,7 +142,7 @@ async function drawBarChart(){
     .attr("y", h)
     .style("fill", "white")
 
-    yLabel.text('Population')
+    yLabel.text('Population (in Billion)')
     .attr('x', -h/1.5)
     .attr('y', -3)
     .attr("dy", "1em")
