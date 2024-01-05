@@ -40,12 +40,17 @@ async function drawBarChart(){
     const data = object.data
     const width = 18
     const middlePadding = 9.6
-    const tooltip = d3.select(".container").append("div")
+    const tooltip = d3.select(".container")
+        .append("div")
         .attr("class", "tooltip")
-        .style("opacity", 0);
+        .style("opacity", 0)
+        .style("position", "fixed")
+        .style("background-color", "rgba(255, 255, 255, 0.8)") // Transparent grey background
+        .style("border", "1px solid #fff") // 1px white border
+        .style("pointer-events", "none") // Disable pointer events
+        .style("color", "black")
+        .style("border-radius", "3px");
    
-    console.log(data)
-
     let svg = d3.select(".container").append("div")
         .attr("class", "barchart")
         .append("svg")
@@ -116,14 +121,14 @@ async function drawBarChart(){
         });
 
     tooltip.transition()
-        .duration(200)
+        .duration(20)
         .style("opacity", 0.9);
     tooltip.html(`<strong>Year:</strong> ${d.year}<br/><strong>Population:</strong> ${d.population}`+" Billion")
         .style("left", event.clientX + "px")
         .style("top", event.clientY - 28 + "px")
         .style("z", 5)
         .style("background_color", "red")
-        .style("color","white");
+        .style("color","black");
     })
 
     .on("mouseout", function () {
@@ -187,9 +192,7 @@ async function drawLineChart(){
     const yScale = object.yScale;
     const colorScale = object.colorScale;
     const data = object.data;
-    const tooltip = d3.select(".container").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
+    const tooltip = d3.select(".tooltip")
 
     let svg = d3.select("svg")
 
@@ -230,8 +233,7 @@ async function drawLineChart(){
                 .style("left", event.clientX + "px")
                 .style("top", event.clientY - 28 + "px")
                 .style("z", 5)
-                .style("background_color", "red")
-                .style("color", "white");
+
         })
 
         .on("mouseout", function () {
@@ -281,9 +283,7 @@ async function drawLineChart(){
             const yScale = object.yScale;
             const colorScale = object.colorScale;
             const data = object.data;
-            const tooltip = d3.select(".container").append("div")
-                .attr("class", "tooltip")
-                .style("opacity", 0);
+            const tooltip = d3.select(".tooltip")
 
             let svg = d3.select("svg")
 
@@ -324,8 +324,7 @@ async function drawLineChart(){
                         .style("left", event.clientX + "px")
                         .style("top", event.clientY - 28 + "px")
                         .style("z", 5)
-                        .style("background_color", "red")
-                        .style("color", "white");
+
                 })
 
                 .on("mouseout", function () {
