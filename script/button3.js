@@ -27,7 +27,7 @@ async function scaleConstBar(){
 
     const colorScale = d3.scaleLinear()
     .domain([d3.max(data, (d) => {return d.population}),d3.min(data, (d) => {return d.population})])
-    .range([150,255])
+    .range([50,255])
 
     return {'data': data, 'xScale':null, 'yScale':yScale, 'colorScale': colorScale}
 }
@@ -117,7 +117,7 @@ async function drawBarChart(){
         d3.select(this)
         .attr("fill", (d) => {
             // Adjust brightness or color for glowing effect
-            return "rgb(50," + (colorScale(parseFloat(d.population))) + ",0)";
+            return "rgb(0," + (colorScale(parseFloat(d.population))) + ",25)";
         });
 
     tooltip.transition()
@@ -162,7 +162,6 @@ async function drawBarChart(){
     // .attr("transform", "translate(" + 20 + "," + (h) + ")")
     // .call(xAxis = d3.axisBottom().scale(xScale));
 }
-
 
 
 async function scaleConstLine(){
