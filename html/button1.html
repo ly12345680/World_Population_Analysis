@@ -5,9 +5,10 @@
     <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.min.js"></script>
     <script type="module" src="../script/map.js"></script>
     
+    
   </head>
   <body>
-    <div class="container">
+    <div class="container" id = "map">
       <div class="navbar">
           <ul>
               <li><a href="main.html">BACK</a></li>
@@ -17,6 +18,27 @@
           </ul>
       </div>
       <svg class = "map" width="1000" height="1000"></svg>
+      <div id ="tooltip"></div>
+      <div class="legend" >
+        <h1>Growth Rate</h1>
+        <div class = "index-level-bar">
+          <svg id = "legend_bar"></svg>
+        </div>
+        <p1 class="bar-label first">Lower</p1>
+        <p1 class="bar-label second">Higher</p1>
+      </div>
+      
+    </div>
+    <div class = "container" id ="lineChart">
+      <div class="navbar">
+        <ul id = "backToMap">
+            <li><a>BACK</a></li>
+        </ul>
+    </div>
+    
+    
+      <svg id = "lineChart1"></svg>
+      
   </div>
   
 </body>
