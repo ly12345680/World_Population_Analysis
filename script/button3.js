@@ -104,9 +104,9 @@ async function drawBarChart(){
     rect.attr("width", () => {
         return width
     }).attr("height", (d) => {
-        return yScale(d.population) - 39.3
+        return h
     }).attr("y", (d) => {
-        return h - yScale(d.population) - padding + 35
+        return h
     }).attr("x", (d, i) => {
         return i * width + i * middlePadding + padding + 7
     })
@@ -139,31 +139,30 @@ async function drawBarChart(){
 
     tooltip.transition()
         .duration(500)
-        .style("opacity", 0);
+        .style("opacity", 0)
+    })
+    .transition()
+    .duration(1000) // Set the duration of the transition in milliseconds
+    .attr("height", (d) => {
+        return  yScale(d.population) - 39.3
+    })
+    .attr("y", (d) => {
+        return h - yScale(d.population) - padding + 35
     });
 
-
     xLabel.text("Year")
-    .attr("x", w/3)
+    .attr("x", w/2)
     .attr("y", h)
     .style("fill", "white")
+    .style("font-size","15px")
 
     yLabel.text('Population (in Billion)')
-    .attr('x', -h/1.5)
-    .attr('y', -3)
+    .attr('x', -h/3)
+    .attr('y', 30)
     .attr("dy", "1em")
     .attr('transform', 'rotate(-90)')
     .style("fill", "white")
-
-    
-    
-    // svg.append("g")
-    // .attr("class", "axis")
-    // .attr("transform", "translate(" + 20 + "," + (h) + ")")
-    // .call(xAxis = d3.axisBottom().scale(xScale));
 }
-
-
 async function scaleConstLine(){
     const dataRaw = await loadData('../asset/data/Global_annual_mean_temp.csv')
     let data = []
@@ -219,9 +218,6 @@ async function drawLineChart(){
         .attr("cy", d => yScale(d.no_smoothing) +5)
         .attr("r", 4)
         .attr("fill", "red") // Adjust color as needed
-
-    
-
         .on("mouseover", function (event, d) {
             d3.select(this).attr("r", 6); // Enlarge the dot on hover
 
@@ -248,7 +244,7 @@ async function drawLineChart(){
             .text("Temperature with no smoothing")
             .attr("fill", "red")
             .style("font-size", "20px");
-    
+        
     }
 
         async function scaleConstLine1(){
@@ -341,8 +337,7 @@ async function drawLineChart(){
                     .style("font-size", "20px");
             }
         // Call the function to draw the line chart
-       
-
+     
         async function Drawchart(){
             drawBarChart()
             drawLineChart()
