@@ -1,4 +1,4 @@
-const h = 540, w = 2500, padding = 30
+const h = 560, w = 2500, padding = 30
 
 async function loadData(url) {
   try {
@@ -139,7 +139,7 @@ async function drawBarChart(){
     .transition()
     .duration(1000) // Set the duration of the transition in milliseconds
     .attr("height", (d) => {
-        return  yScale(d.population) - 39.3
+        return  yScale(d.population) - 39.3 
     })
     .attr("y", (d) => {
         return 500 - yScale(d.population) - padding + 35
@@ -253,7 +253,7 @@ async function drawLineChart(){
             .attr("x", 500)
             .attr("y", 520)
             .attr("class", "y-axis-right line-chart-elements")
-            .text("Temperature with no smoothing")
+            .text("Temperature values without any smoothing applied")
             .attr("fill", "red")
             .style("font-size", "15px");
 
@@ -368,7 +368,7 @@ async function drawLineChart(){
                     .attr("class", "y-axis-right line-chart-elements")
                     .attr("x", 500)
                     .attr("y", 520 )
-                    .text("Temperature with Lowess smoothing")
+                    .text("Temperature values smoothed using a Lowess")
                     .attr("fill", "orange")
                     .style("font-size", "15px");
                 
@@ -379,152 +379,238 @@ async function drawLineChart(){
                     .attr("stroke", "orange") // Adjust color as needed
                     .attr("stroke-width", 2)
                     .attr("d", line);
-
             }
-            // async function scaleConstLine2(){
-            //     const dataRaw = await loadData("../asset/data/co2_mm_mlo.csv")
-            //     let data = []
-            //     for(let i = 0; i < dataRaw.length; i++){
-            //         data.push({"month": dataRaw[i]["month"],"average": dataRaw[i]["average"]
-            // })
-            //     }
-        
-            //     const xScale = d3.scaleLinear()
-            //         .domain([d3.min(data, d => d.month), d3.max(data,d => d.month)])
-            //         .range([padding, 1500 - padding]);
-        
-            //     const yScale = d3.scaleLinear()
-            //         .domain([d3.min(data, d => d.average), d3.max(data, d => d.average)])
-            //         .range([500 - padding - 200, padding - 25]);
-        
-            //         const colorScale = d3.scaleLinear()
-            //         .domain([d3.min(data, d => d.average), d3.max(data, d => d.average)])
-            //         .range([0, 255]);
-            // }
-            // async function drawLineChart2(){
-            //     const object = await scaleConstLine2();
-            //     const yScale = object.yScale;
-            //     const colorScale = object.colorScale;
-            //     const data = object.data;
-            //     const tooltip = d3.select(".tooltip")
-            
-            //     let svg = d3.select("svg")
-            
-            //     const xScale = d3.scaleBand()
-            //         .domain(data.map(d => d.month))
-            //         .range([padding, 1500 - padding])
-            //         .padding(0.1);
-            
-            //     const line = d3.line()
-            //         .x(d => xScale(d.month) + 13)
-            //         .y(d => yScale(d.average) +  100);
-            
-            //     const yScaleForAverage = d3.scaleLinear()
-            //         .domain([d3.min(data, d => d.average), d3.max(data, d => d.average)])
-            //         .range([500 - padding - 200, padding - 25]);
-                
-            //     svg.append("path")
-            //         .datum(data)
-            //         .attr("class", "y-axis-right line-chart-elements")
-            //         .attr("fill", "none")
-            //         .attr("stroke", "Blue") 
-            //         .attr("stroke-width", 2)
-            //         .attr("d", line);
-            // }
 
-async function scaleMiniLine(){
-    const dataRaw = await loadData("../asset/data/co2_mm_mlo.csv")
-    let data = []
-    let currentYear = +dataRaw[0]["year"], currentMonth = dataRaw[0]["month"], index = 0, sum = 0, startMonth = currentMonth
-    console.log(data)
+// async function scaleMiniLine(){
+//     const dataRaw = await loadData("../asset/data/co2_mm_mlo.csv")
+//     let data = []
+//     let currentYear = +dataRaw[0]["year"], currentMonth = dataRaw[0]["month"], index = 0, sum = 0, startMonth = currentMonth
 
-    while(data.length <= 10){
-        if(currentYear === +dataRaw[index]["year"] && currentMonth < 13){
-            currentMonth++
-            sum += +dataRaw[index]["average"]
+//     while(data.length <= 10){
+//         if(currentYear === +dataRaw[index]["year"] && currentMonth < 13){
+//             currentMonth++
+//             sum += +dataRaw[index]["average"]
 
-        } else {
-            data.push({"year": dataRaw[index]["year"],"average": sum/(currentMonth-startMonth)})
-            currentYear++
-            currentMonth = 1
-            sum = 0
-            startMonth = 1
-        }
-        index++
-    }
-    console.log(data)
+//         } else {
+//             data.push({"year": dataRaw[index]["year"],"average": sum/(currentMonth-startMonth)})
+//             currentYear++
+//             currentMonth = 1
+//             sum = 0
+//             startMonth = 1
+//         }
+//         index++
+//     }
 
-    const yScale = d3.scaleLinear()
-    .domain([d3.max(data, function(d) { return d.average; }), 0])
-    .range([padding,500 - padding]);
+//     const yScale = d3.scaleLinear()
+//     .domain([d3.max(data, function(d) { return d.average; }), 0])
+//     .range([padding,500 - padding]);
 
-    const colorScale = d3.scaleLinear()
-    .domain([d3.max(data, (d) => {return d.population}),d3.min(data, (d) => {return d.population})])
-    .range([100,255])
+//     const colorScale = d3.scaleLinear()
+//     .domain([d3.max(data, (d) => {return d.population}),d3.min(data, (d) => {return d.population})])
+//     .range([100,255])
 
-    return {'data': data, 'xScale':null, 'yScale':yScale, 'colorScale': colorScale}
-}
+//     return {'data': data, 'xScale':null, 'yScale':yScale, 'colorScale': colorScale}
+// }
 
-async function drawMiniLineChart(){
-    const object = await scaleMiniLine();
-    const yScale = object.yScale;
-    const colorScale = object.colorScale;
-    const data = object.data;
+// async function drawMiniLineChart(){
+//     const object = await scaleMiniLine();
+//     const yScale = object.yScale;
+//     const colorScale = object.colorScale;
+//     const data = object.data;
 
-    let svg = d3.select(".container").append("div")
-    .attr("class", "linechart")
-    .append("svg")
-    .attr("height", h)
-    .attr("width", w)
+//     let svg = d3.select(".container").append("div")
+//     .attr("class", "linechart")
+//     .append("svg")
+//     .attr("id","miniLinechart")
+//     .attr("height", h)
+//     .attr("width", w)
 
-    const xScale = d3.scaleBand()
-        .domain(data.map(d => d.year))
-        .range([padding, 1500 - padding])
-        .padding(0.1);
+//     const xScale = d3.scaleBand()
+//         .domain(data.map(d => d.year))
+//         .range([padding, 1630 - padding])
+//         .padding(0.1);
 
-    const line = d3.line()
-        .x(d => xScale(d.year) + 13)
-        .y(d => yScale(d.average) + 100);
+//     const line = d3.line()
+//         .x(d => xScale(d.year) - 12)
+//         .y(d => yScale(d.average) + 200);
+      
 
-    const yScaleForTemp = d3.scaleLinear()
-        .domain([d3.min(data, d => d.average), d3.max(data, d => d.average)])
-        .range([500 - padding - 200, padding - 25]);
+//     const yScaleForTemp = d3.scaleLinear()
+//         .domain([d3.min(data, d => d.average), d3.max(data, d => d.average)])
+//         .range([500 - padding - 300, padding -25]);
 
-    const yAxisForTemp = d3.axisRight(yScaleForTemp); // Use axisRight for y-axis on the right
-
-    svg.append("g")
-        .attr("class", "y-axis-right line-chart-elements") // Add a class for styling
-        .attr("transform", `translate(${1475}, 100)`) // Position on the right side
-        .call(yAxisForTemp)
-        .attr("fill", "Blue");
-
-    svg.selectAll(".y-axis-right .tick text") // Change the color of y-axis tick values to white
-        .attr("fill", "white");
+//     const yAxisForTemp = d3.axisRight(yScaleForTemp); // Use axisRight for y-axis on the right
     
-    svg.append("path")
-        .datum(data)
-        .attr("class", "y-axis-right line-chart-elements")
-        .attr("fill", "none")
-        .attr("stroke", "Blue") // Adjust color as needed
-        .attr("stroke-width", 2)
-        .attr("d", line);
+//     svg.append("g")
+//         .attr("class", "y-axis-right line-chart-elements") // Add a class for styling
+//         .attr("transform", `translate(${1475}, 100)`) // Position on the right side
+//         .call(yAxisForTemp)
+//         .attr("fill", "Blue");
 
-    svg.append("text")
-        .attr("x", 500)
-        .attr("y", 520)
-        .attr("class", "y-axis-right line-chart-elements")
-        .text("Average CO2")
-        .attr("fill", "Blue")
-        .style("font-size", "15px");
+//     svg.selectAll(".y-axis-right .tick text") // Change the color of y-axis tick values to white
+//         .attr("fill", "white");
+    
+//     svg.append("path")
+//         .datum(data)
+//         .attr("class", "y-axis-right line-chart-elements")
+//         .attr("fill", "none")
+//         .attr("stroke", "Blue") // Adjust color as needed
+//         .attr("stroke-width", 2)
+//         .attr("d", line);
 
-    svg.append("path")
-        .attr("class", "y-axis-right line-chart-elements")
-        .attr("d","M 495 515 435 515")
-        .attr("fill", "none")
-        .attr("stroke", "Blue") 
-        .attr("stroke-width", 2)
-        .attr("d", line);
-}
+//     svg.append("text")
+//         .attr("x", 500)
+//         .attr("y", 520)
+//         .attr("class", "y-axis-right line-chart-elements")
+//         .text("Average CO2")
+//         .attr("fill", "Blue")
+//         .style("font-size", "15px");
+
+//     svg.append("path")
+//         .attr("class", "y-axis-right line-chart-elements")
+//         .attr("d","M 495 515 435 515")
+//         .attr("fill", "none")
+//         .attr("stroke", "Blue") 
+//         .attr("stroke-width", 2)
+//         .attr("d", line);
+// }
+// async function scaleConstBar1(){
+//     const dataRaw = await loadData("../asset/data/Global_annual_population.csv")
+//     let data = []
+//     for(let i = 10; i < dataRaw.length; i++){
+//         data.push({"year": dataRaw[i]["Year"],"population": dataRaw[i][" Population"]})
+//     }
+
+//     const yScale = d3.scaleLinear()
+//     .domain([d3.max(data, function(d) { return d.population; }), 0])
+//     .range([500 - padding, padding]);
+
+//     const colorScale = d3.scaleLinear()
+//     .domain([d3.max(data, (d) => {return d.population}),d3.min(data, (d) => {return d.population})])
+//     .range([100,255])
+
+//     return {'data': data, 'xScale':null, 'yScale':yScale, 'colorScale': colorScale}
+// }
+
+// async function drawBarChart1(){
+//     const object = await scaleConstBar1()
+//     const xScale = object.xScale
+//     const yScale = object.yScale
+//     const colorScale = object.colorScale
+//     const data = object.data
+//     const width = 18
+//     const middlePadding = 9.6
+//     const tooltip = d3.select(".tooltip")
+   
+//     let svg = d3.select("#miniLinechart")
+
+//         const xScaleForYears = d3.scaleBand()
+//         .domain(data.map(d => d.year))
+//         .range([padding, 1500 - padding])
+//         .padding(0.1);
+
+//     const xAxis = d3.axisBottom(xScaleForYears);
+
+//     svg.append("g")
+//         .attr("class", "x-axis")
+//         .attr("transform", `translate(0, ${500 - padding})`)
+//         .call(xAxis)
+//         .attr("fill", "#006d7c");
+
+//     svg.selectAll(".tick text") // Change the color of x-axis tick values to white
+//         .attr("fill", "white");
+
+//     // Create y-axis scale and axis
+    
+
+//     const yScaleForPop = d3.scaleLinear()
+//     .domain([0, d3.max(data, function(d) { return Math.ceil(d.population); })]) // Reversed domain
+//     .range([500 - padding, padding]);
+
+//     const yAxis = d3.axisLeft(yScaleForPop);
+
+//     svg.append("g")
+//         .attr("class", "y-axis")
+//         .attr("transform", `translate(${padding}, 0)`)
+//         .call(yAxis)
+//         .attr("fill", "#006d7c");
+
+//     svg.selectAll(".y-axis .tick text") // Change the color of y-axis tick values to white
+//         .attr("fill", "white");
+    
+    
+
+//     let xLabel = svg.selectAll('xLabel').data(data).enter().append('text')
+//     let yLabel = svg.selectAll('yLabel').data(data).enter().append('text')
+
+//     let rect =  svg.selectAll("rect")
+//         .data(data)
+//         .enter()
+//         .append("rect");
+
+//     rect.attr("width", () => {
+//         return width
+//     }).attr("height", (d) => {
+//         return h
+//     }).attr("y", (d) => {
+//         return h
+//     }).attr("x", (d, i) => {
+//         return i * width + i * middlePadding + padding + 7
+//     })
+//     .attr("fill", (d) => {
+//         return `rgb(100, ${colorScale(parseFloat(d.population))}, ${colorScale(parseFloat(d.population))})`
+//     })    
+//     .on("mouseover", function (event, d) {
+//         d3.select(this)
+//         .attr("fill", (d) => {
+//             // Adjust brightness or color for glowing effect
+//             return "rgb(255,150,50)";
+//         });
+
+//     tooltip.transition()
+//         .duration(20)
+//         .style("opacity", 0.9);
+//     tooltip.html(`<strong>Year:</strong> ${d.year}<br/><strong>Population:</strong> ${d.population}`+" Billion")
+//         .style("left", event.clientX + "px")
+//         .style("top", event.clientY - 28 + "px")
+//         .style("z", 5)
+//         .style("background_color", "red")
+//         .style("color","black");
+//     })
+
+//     .on("mouseout", function () {
+//         d3.select(this)
+//         .attr("fill", (d) => {
+//             return `rgb(100, ${colorScale(parseFloat(d.population))}, ${colorScale(parseFloat(d.population))})`;
+//         });
+
+//     tooltip.transition()
+//         .duration(500)
+//         .style("opacity", 0)
+//     })
+//     .transition()
+//     .duration(1000) // Set the duration of the transition in milliseconds
+//     .attr("height", (d) => {
+//         return  yScale(d.population) - 39.3 
+//     })
+//     .attr("y", (d) => {
+//         return 500 - yScale(d.population) - padding + 35
+//     });
+
+//     xLabel.text("Year")
+//     .attr("x", 1475)
+//     .attr("y", 490)
+//     .style("fill", "white")
+//     .style("font-size","20px")
+
+//     yLabel.text('Population (in Billion)')
+//     .attr('x', -500/3)
+//     .attr('y', 30)
+//     .attr("dy", "1em")
+//     .attr('transform', 'rotate(-90)')
+//     .style("fill", "white")
+// }
+
 
 let currentLineChartFunction = drawLineChart;
 
@@ -536,7 +622,5 @@ function toggleLineChart() {
 
 
 drawBarChart();
-drawMiniLineChart();
 drawLineChart(); 
-drawLineChart2();
 
