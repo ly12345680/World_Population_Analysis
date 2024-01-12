@@ -57,3 +57,7 @@
 .navbar ul li:hover::after {
     width: 100%;
 }
+H1{
+    color: white;
+    font-size: 45px;
+}
