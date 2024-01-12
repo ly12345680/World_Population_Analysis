@@ -57,3 +57,16 @@ H1{
     color: white;
     font-size: 45px;
 }
+button {
+    display: block;
+    width:150px;
+    margin:10px auto;
+    padding:7px;
+    text-align:center;
+    background:#3389bb;
+    font-size:20px;
+    font-family: 'Arial', sans-serif;
+    color:#ffffff;
+    white-space: nowrap;
+    box-sizing: border-box;
+}

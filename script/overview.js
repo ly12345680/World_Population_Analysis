@@ -147,9 +147,9 @@ function createBarChart(data) {
         tooltip.style("opacity", 0);
       })
       .transition() // Add transition animation
-    .duration(2000) // Set the duration of the animation (in milliseconds)
-    .attr("y", d => yScale(d.population)) // Animate the bars to their final height
-    .attr("height", d => height - yScale(d.population)); // Animate the bars to their final height;
+      .duration(2000) // Set the duration of the animation (in milliseconds)
+      .attr("y", d => yScale(d.population)) // Animate the bars to their final height
+      .attr("height", d => height - yScale(d.population)); // Animate the bars to their final height;
 
     
 } // end function createBarChart

@@ -308,7 +308,7 @@ async function drawLineChart(){
 
             svg.append("g")
                 .attr("class", "y-axis-right") // Add a class for styling
-                .attr("transform", `translate(${1505}, -49)`) // Position on the right side
+                .attr("transform", `translate(${1475}, -49)`) // Position on the right side
                 .call(yAxisForLowess)
                 .attr("fill", "orange");
 
@@ -363,46 +363,30 @@ async function drawLineChart(){
                         .style("opacity", 0);
                 })
                 svg.append("text")
-                    .attr("x", 825)
+                    .attr("x", 500)
                     .attr("y", 520 )
                     .text("Temperature with Lowess smoothing")
                     .attr("fill", "orange")
                     .style("font-size", "15px");
                 
                 svg.append("path")
-                    .attr("d","M 820 515 760 515")
+                    .attr("d","M 495 515 435 515")
                     .attr("fill", "none")
                     .attr("stroke", "orange") // Adjust color as needed
                     .attr("stroke-width", 2)
                     .attr("d", line);
 
             }
-        // Call the function to draw the line chart
-function createButton(){
-    let button1 = document.createElement("button")
-    button1.className="option1"
-    button1.textContent="option1"
 
-    let button2 = document.createElement("button")
-    button2.className="option2"
-    button2.textContent="option2"
+            let currentLineChartFunction = drawLineChart;
 
-    console.log(button1)
+            function toggleLineChart() {
+              d3.select("svg").selectAll("*").remove()
+                currentLineChartFunction = (currentLineChartFunction === drawLineChart) ? drawLineChart1 : drawLineChart
+                currentLineChartFunction()
+                drawBarChart()
+            }
+            
 
-    document.querySelector(".barchart").appendChild(button1)
-}
-
-async function Drawchart(){
-    drawBarChart()
-    drawLineChart()
-    drawLineChart1()
-    createButton()
-}
-Drawchart()
-
-
-  
-
-
-  
-    
+              drawBarChart();
+              drawLineChart(); 
