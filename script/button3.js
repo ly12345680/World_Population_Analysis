@@ -1,4 +1,4 @@
-const h = 500, w = 1500, padding = 30
+const h = 1500, w = 2500, padding = 30
 
 async function loadData(url) {
   try {
@@ -17,17 +17,13 @@ async function scaleConstBar(){
         data.push({"year": dataRaw[i]["Year"],"population": dataRaw[i][" Population"]})
     }
 
-    // const xScale = d3.scaleLinear()
-    // .domain([0, d3.max(data, function(d) { return d.population; })])
-    // .range([padding, w - padding]);
-
     const yScale = d3.scaleLinear()
     .domain([d3.max(data, function(d) { return d.population; }), 0])
-    .range([h - padding, padding]);
+    .range([500 - padding, padding]);
 
     const colorScale = d3.scaleLinear()
     .domain([d3.max(data, (d) => {return d.population}),d3.min(data, (d) => {return d.population})])
-    .range([50,255])
+    .range([100,255])
 
     return {'data': data, 'xScale':null, 'yScale':yScale, 'colorScale': colorScale}
 }
@@ -59,14 +55,14 @@ async function drawBarChart(){
 
         const xScaleForYears = d3.scaleBand()
         .domain(data.map(d => d.year))
-        .range([padding, w - padding])
+        .range([padding, 1500 - padding])
         .padding(0.1);
 
     const xAxis = d3.axisBottom(xScaleForYears);
 
     svg.append("g")
         .attr("class", "x-axis")
-        .attr("transform", `translate(0, ${h - padding})`)
+        .attr("transform", `translate(0, ${500 - padding})`)
         .call(xAxis)
         .attr("fill", "white");
 
@@ -78,7 +74,7 @@ async function drawBarChart(){
 
     const yScaleForPop = d3.scaleLinear()
     .domain([0, d3.max(data, function(d) { return Math.ceil(d.population); })]) // Reversed domain
-    .range([h - padding, padding]);
+    .range([500 - padding, padding]);
 
     const yAxis = d3.axisLeft(yScaleForPop);
 
@@ -111,13 +107,13 @@ async function drawBarChart(){
         return i * width + i * middlePadding + padding + 7
     })
     .attr("fill", (d) => {
-        return `rgb(${colorScale(parseFloat(d.population))},${colorScale(parseFloat(d.population))}, ${colorScale(parseFloat(d.population))})`
+        return `rgb(100, ${colorScale(parseFloat(d.population))}, ${colorScale(parseFloat(d.population))})`
     })    
     .on("mouseover", function (event, d) {
         d3.select(this)
         .attr("fill", (d) => {
             // Adjust brightness or color for glowing effect
-            return "rgb(0," + (colorScale(parseFloat(d.population))) + ",25)";
+            return "rgb(255,150,50)";
         });
 
     tooltip.transition()
@@ -134,7 +130,7 @@ async function drawBarChart(){
     .on("mouseout", function () {
         d3.select(this)
         .attr("fill", (d) => {
-            return `rgb(${colorScale(parseFloat(d.population))},${colorScale(parseFloat(d.population))},${colorScale(parseFloat(d.population))})`;
+            return `rgb(100, ${colorScale(parseFloat(d.population))}, ${colorScale(parseFloat(d.population))})`;
         });
 
     tooltip.transition()
@@ -147,17 +143,17 @@ async function drawBarChart(){
         return  yScale(d.population) - 39.3
     })
     .attr("y", (d) => {
-        return h - yScale(d.population) - padding + 35
+        return 500 - yScale(d.population) - padding + 35
     });
 
     xLabel.text("Year")
-    .attr("x", w/2)
-    .attr("y", h)
+    .attr("x", 1475)
+    .attr("y", 490)
     .style("fill", "white")
-    .style("font-size","15px")
+    .style("font-size","20px")
 
     yLabel.text('Population (in Billion)')
-    .attr('x', -h/3)
+    .attr('x', -500/3)
     .attr('y', 30)
     .attr("dy", "1em")
     .attr('transform', 'rotate(-90)')
@@ -172,11 +168,11 @@ async function scaleConstLine(){
 
     const xScale = d3.scaleLinear()
         .domain([d3.min(data, d => d.year), d3.max(data, d => d.year)])
-        .range([padding, w - padding]);
+        .range([padding, 1500 - padding]);
 
     const yScale = d3.scaleLinear()
         .domain([d3.min(data, d => d.no_smoothing), d3.max(data, d => d.no_smoothing)])
-        .range([h - padding - 200, padding + 30]);
+        .range([500 - padding - 200, padding - 25]);
 
     const colorScale = d3.scaleLinear()
         .domain([d3.min(data, d => d.no_smoothing), d3.max(data, d => d.no_smoothing)])
@@ -196,14 +192,29 @@ async function drawLineChart(){
 
     const xScale = d3.scaleBand()
         .domain(data.map(d => d.year))
-        .range([padding, w - padding])
+        .range([padding, 1500 - padding])
         .padding(0.1);
 
     const line = d3.line()
         .x(d => xScale(d.year) + 13)
-        .y(d => yScale(d.no_smoothing) + 5);
+        .y(d => yScale(d.no_smoothing) +  100);
 
-    svg.append("path")
+    const yScaleForTemp = d3.scaleLinear()
+        .domain([d3.min(data, d => d.no_smoothing), d3.max(data, d => d.no_smoothing)])
+        .range([500 - padding - 200, padding - 25]);
+
+    const yAxisForTemp = d3.axisRight(yScaleForTemp); // Use axisRight for y-axis on the right
+
+    svg.append("g")
+        .attr("class", "y-axis-right") // Add a class for styling
+        .attr("transform", `translate(${1475}, 100)`) // Position on the right side
+        .call(yAxisForTemp)
+        .attr("fill", "red");
+
+    svg.selectAll(".y-axis-right .tick text") // Change the color of y-axis tick values to white
+        .attr("fill", "white");
+    
+        svg.append("path")
         .datum(data)
         .attr("fill", "none")
         .attr("stroke", "red") // Adjust color as needed
@@ -215,7 +226,7 @@ async function drawLineChart(){
         .enter().append("circle")
         .attr("class", "dot")
         .attr("cx", d => xScale(d.year) + 13)
-        .attr("cy", d => yScale(d.no_smoothing) +5)
+        .attr("cy", d => yScale(d.no_smoothing) + 100)
         .attr("r", 4)
         .attr("fill", "red") // Adjust color as needed
         .on("mouseover", function (event, d) {
@@ -239,13 +250,20 @@ async function drawLineChart(){
                 .style("opacity", 0);
         })
         svg.append("text")
-            .attr("x", w - 1000)
-            .attr("y", padding + 40)
+            .attr("x", 500)
+            .attr("y", 520)
+            .attr("class", "smoothingLabel")
             .text("Temperature with no smoothing")
             .attr("fill", "red")
-            .style("font-size", "20px");
-        
-    }
+            .style("font-size", "15px");
+
+        svg.append("path")
+            .attr("d","M 495 515 435 515")
+            .attr("fill", "none")
+            .attr("stroke", "red") // Adjust color as needed
+            .attr("stroke-width", 2)
+            .attr("d", line);
+}
 
         async function scaleConstLine1(){
             const dataRaw = await loadData('../asset/data/Global_annual_mean_temp.csv')
@@ -260,11 +278,11 @@ async function drawLineChart(){
             
             const xScale = d3.scaleLinear()
                 .domain([d3.min(data, d => d.year), d3.max(data, d => d.year)])
-                .range([padding, w - padding]);
+                .range([padding, 1500 - padding]);
 
             const yScale = d3.scaleLinear()
                 .domain([d3.min(data, d => d.lowess), d3.max(data, d => d.lowess)])
-                .range([h - padding - 200, padding + 30]);
+                .range([500 - padding - 200, padding + 30]);
 
             const colorScale = d3.scaleLinear()
                 .domain([d3.min(data, d => d.lowess), d3.max(data, d => d.lowess)])
@@ -282,9 +300,24 @@ async function drawLineChart(){
 
             let svg = d3.select("svg")
 
+            const yScaleForLowess = d3.scaleLinear()
+                .domain([d3.min(data, d => d.lowess), d3.max(data, d => d.lowess)])
+                .range([500 - padding - 200, padding + 30]);
+
+            const yAxisForLowess = d3.axisRight(yScaleForLowess); // Use axisRight for y-axis on the right
+
+            svg.append("g")
+                .attr("class", "y-axis-right") // Add a class for styling
+                .attr("transform", `translate(${1505}, -49)`) // Position on the right side
+                .call(yAxisForLowess)
+                .attr("fill", "orange");
+
+            svg.selectAll(".y-axis-right .tick text") // Change the color of y-axis tick values to white
+                .attr("fill", "white");
+
             const xScale = d3.scaleBand()
                 .domain(data.map(d => d.year))
-                .range([padding, w - padding])
+                .range([padding, 1500 - padding])
                 .padding(0.1);
 
             const line = d3.line()
@@ -330,20 +363,44 @@ async function drawLineChart(){
                         .style("opacity", 0);
                 })
                 svg.append("text")
-                    .attr("x", w - 1000)
-                    .attr("y", padding )
+                    .attr("x", 825)
+                    .attr("y", 520 )
                     .text("Temperature with Lowess smoothing")
                     .attr("fill", "orange")
-                    .style("font-size", "20px");
+                    .style("font-size", "15px");
+                
+                svg.append("path")
+                    .attr("d","M 820 515 760 515")
+                    .attr("fill", "none")
+                    .attr("stroke", "orange") // Adjust color as needed
+                    .attr("stroke-width", 2)
+                    .attr("d", line);
+
             }
         // Call the function to draw the line chart
-     
-        async function Drawchart(){
-            drawBarChart()
-            drawLineChart()
-            drawLineChart1()
+function createButton(){
+    let button1 = document.createElement("button")
+    button1.className="option1"
+    button1.textContent="option1"
+
+    let button2 = document.createElement("button")
+    button2.className="option2"
+    button2.textContent="option2"
+
+    console.log(button1)
+
+    document.querySelector(".barchart").appendChild(button1)
+}
+
+async function Drawchart(){
+    drawBarChart()
+    drawLineChart()
+    drawLineChart1()
+    createButton()
 }
 Drawchart()
+
+
   
 
 
