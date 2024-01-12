@@ -27,7 +27,7 @@ async function scaleConstBar(){
 
     const colorScale = d3.scaleLinear()
     .domain([d3.max(data, (d) => {return d.population}),d3.min(data, (d) => {return d.population})])
-    .range([150,255])
+    .range([50,255])
 
     return {'data': data, 'xScale':null, 'yScale':yScale, 'colorScale': colorScale}
 }
@@ -40,12 +40,17 @@ async function drawBarChart(){
     const data = object.data
     const width = 18
     const middlePadding = 9.6
-    const tooltip = d3.select(".container").append("div")
+    const tooltip = d3.select(".container")
+        .append("div")
         .attr("class", "tooltip")
-        .style("opacity", 0);
+        .style("opacity", 0)
+        .style("position", "fixed")
+        .style("background-color", "rgba(255, 255, 255, 0.8)") // Transparent grey background
+        .style("border", "1px solid #fff") // 1px white border
+        .style("pointer-events", "none") // Disable pointer events
+        .style("color", "black")
+        .style("border-radius", "3px");
    
-    console.log(data)
-
     let svg = d3.select(".container").append("div")
         .attr("class", "barchart")
         .append("svg")
@@ -99,33 +104,33 @@ async function drawBarChart(){
     rect.attr("width", () => {
         return width
     }).attr("height", (d) => {
-        return yScale(d.population) - 39.3
+        return h
     }).attr("y", (d) => {
-        return h - yScale(d.population) - padding + 35
+        return h
     }).attr("x", (d, i) => {
         return i * width + i * middlePadding + padding + 7
     })
     .attr("fill", (d) => {
         return `rgb(${colorScale(parseFloat(d.population))},${colorScale(parseFloat(d.population))}, ${colorScale(parseFloat(d.population))})`
-    })
-
+    })    
     .on("mouseover", function (event, d) {
         d3.select(this)
         .attr("fill", (d) => {
             // Adjust brightness or color for glowing effect
-            return "rgb(50," + (colorScale(parseFloat(d.population))) + ",0)";
+            return "rgb(0," + (colorScale(parseFloat(d.population))) + ",25)";
         });
 
     tooltip.transition()
-        .duration(200)
+        .duration(20)
         .style("opacity", 0.9);
     tooltip.html(`<strong>Year:</strong> ${d.year}<br/><strong>Population:</strong> ${d.population}`+" Billion")
         .style("left", event.clientX + "px")
         .style("top", event.clientY - 28 + "px")
         .style("z", 5)
         .style("background_color", "red")
-        .style("color","white");
+        .style("color","black");
     })
+
     .on("mouseout", function () {
         d3.select(this)
         .attr("fill", (d) => {
@@ -134,32 +139,30 @@ async function drawBarChart(){
 
     tooltip.transition()
         .duration(500)
-        .style("opacity", 0);
+        .style("opacity", 0)
+    })
+    .transition()
+    .duration(1000) // Set the duration of the transition in milliseconds
+    .attr("height", (d) => {
+        return  yScale(d.population) - 39.3
+    })
+    .attr("y", (d) => {
+        return h - yScale(d.population) - padding + 35
     });
 
-
     xLabel.text("Year")
-    .attr("x", w/3)
+    .attr("x", w/2)
     .attr("y", h)
     .style("fill", "white")
+    .style("font-size","15px")
 
-    yLabel.text('Population')
-    .attr('x', -h/1.5)
-    .attr('y', -3)
+    yLabel.text('Population (in Billion)')
+    .attr('x', -h/3)
+    .attr('y', 30)
     .attr("dy", "1em")
     .attr('transform', 'rotate(-90)')
     .style("fill", "white")
-
-    
-    
-    // svg.append("g")
-    // .attr("class", "axis")
-    // .attr("transform", "translate(" + 20 + "," + (h) + ")")
-    // .call(xAxis = d3.axisBottom().scale(xScale));
 }
-
-
-
 async function scaleConstLine(){
     const dataRaw = await loadData('../asset/data/Global_annual_mean_temp.csv')
     let data = []
@@ -187,9 +190,7 @@ async function drawLineChart(){
     const yScale = object.yScale;
     const colorScale = object.colorScale;
     const data = object.data;
-    const tooltip = d3.select(".container").append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
+    const tooltip = d3.select(".tooltip")
 
     let svg = d3.select("svg")
 
@@ -217,7 +218,6 @@ async function drawLineChart(){
         .attr("cy", d => yScale(d.no_smoothing) +5)
         .attr("r", 4)
         .attr("fill", "red") // Adjust color as needed
-
         .on("mouseover", function (event, d) {
             d3.select(this).attr("r", 6); // Enlarge the dot on hover
 
@@ -228,8 +228,7 @@ async function drawLineChart(){
                 .style("left", event.clientX + "px")
                 .style("top", event.clientY - 28 + "px")
                 .style("z", 5)
-                .style("background_color", "red")
-                .style("color", "white");
+
         })
 
         .on("mouseout", function () {
@@ -238,10 +237,15 @@ async function drawLineChart(){
             tooltip.transition()
                 .duration(500)
                 .style("opacity", 0);
-        });
+        })
+        svg.append("text")
+            .attr("x", w - 1000)
+            .attr("y", padding + 40)
+            .text("Temperature with no smoothing")
+            .attr("fill", "red")
+            .style("font-size", "20px");
+        
     }
-
-
 
         async function scaleConstLine1(){
             const dataRaw = await loadData('../asset/data/Global_annual_mean_temp.csv')
@@ -274,9 +278,7 @@ async function drawLineChart(){
             const yScale = object.yScale;
             const colorScale = object.colorScale;
             const data = object.data;
-            const tooltip = d3.select(".container").append("div")
-                .attr("class", "tooltip")
-                .style("opacity", 0);
+            const tooltip = d3.select(".tooltip")
 
             let svg = d3.select("svg")
 
@@ -305,6 +307,8 @@ async function drawLineChart(){
                 .attr("r", 4)
                 .attr("fill", "orange") // Adjust color as needed
 
+
+
                 .on("mouseover", function (event, d) {
                     d3.select(this).attr("r", 6); // Enlarge the dot on hover
 
@@ -315,8 +319,7 @@ async function drawLineChart(){
                         .style("left", event.clientX + "px")
                         .style("top", event.clientY - 28 + "px")
                         .style("z", 5)
-                        .style("background_color", "red")
-                        .style("color", "white");
+
                 })
 
                 .on("mouseout", function () {
@@ -325,11 +328,16 @@ async function drawLineChart(){
                     tooltip.transition()
                         .duration(500)
                         .style("opacity", 0);
-                });
+                })
+                svg.append("text")
+                    .attr("x", w - 1000)
+                    .attr("y", padding )
+                    .text("Temperature with Lowess smoothing")
+                    .attr("fill", "orange")
+                    .style("font-size", "20px");
             }
         // Call the function to draw the line chart
-       
-
+     
         async function Drawchart(){
             drawBarChart()
             drawLineChart()
