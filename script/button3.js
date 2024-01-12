@@ -206,7 +206,7 @@ async function drawLineChart(){
     const yAxisForTemp = d3.axisRight(yScaleForTemp); // Use axisRight for y-axis on the right
 
     svg.append("g")
-        .attr("class", "y-axis-right") // Add a class for styling
+        .attr("class", "y-axis-right line-chart-elements") // Add a class for styling
         .attr("transform", `translate(${1475}, 100)`) // Position on the right side
         .call(yAxisForTemp)
         .attr("fill", "red");
@@ -216,6 +216,7 @@ async function drawLineChart(){
     
         svg.append("path")
         .datum(data)
+        .attr("class", "y-axis-right line-chart-elements")
         .attr("fill", "none")
         .attr("stroke", "red") // Adjust color as needed
         .attr("stroke-width", 2)
@@ -224,7 +225,7 @@ async function drawLineChart(){
     svg.selectAll(".dot")
         .data(data)
         .enter().append("circle")
-        .attr("class", "dot")
+        .attr("class", "y-axis-right line-chart-elements")
         .attr("cx", d => xScale(d.year) + 13)
         .attr("cy", d => yScale(d.no_smoothing) + 100)
         .attr("r", 4)
@@ -252,12 +253,13 @@ async function drawLineChart(){
         svg.append("text")
             .attr("x", 500)
             .attr("y", 520)
-            .attr("class", "smoothingLabel")
+            .attr("class", "y-axis-right line-chart-elements")
             .text("Temperature with no smoothing")
             .attr("fill", "red")
             .style("font-size", "15px");
 
         svg.append("path")
+            .attr("class", "y-axis-right line-chart-elements")
             .attr("d","M 495 515 435 515")
             .attr("fill", "none")
             .attr("stroke", "red") // Adjust color as needed
@@ -307,7 +309,7 @@ async function drawLineChart(){
             const yAxisForLowess = d3.axisRight(yScaleForLowess); // Use axisRight for y-axis on the right
 
             svg.append("g")
-                .attr("class", "y-axis-right") // Add a class for styling
+                .attr("class", "y-axis-right line-chart-elements") // Add a class for styling
                 .attr("transform", `translate(${1475}, -49)`) // Position on the right side
                 .call(yAxisForLowess)
                 .attr("fill", "orange");
@@ -326,6 +328,7 @@ async function drawLineChart(){
 
             svg.append("path")
                 .datum(data)
+                .attr("class", "y-axis-right line-chart-elements")
                 .attr("fill", "none")
                 .attr("stroke", "orange") // Adjust color as needed
                 .attr("stroke-width", 2)
@@ -334,7 +337,7 @@ async function drawLineChart(){
             svg.selectAll(".dot1")
                 .data(data)
                 .enter().append("circle")
-                .attr("class", "dot")
+                .attr("class", "y-axis-right line-chart-elements")
                 .attr("cx", d => xScale(d.year) + 13)
                 .attr("cy", d => yScale(d.lowess) - 50)
                 .attr("r", 4)
@@ -363,6 +366,7 @@ async function drawLineChart(){
                         .style("opacity", 0);
                 })
                 svg.append("text")
+                    .attr("class", "y-axis-right line-chart-elements")
                     .attr("x", 500)
                     .attr("y", 520 )
                     .text("Temperature with Lowess smoothing")
@@ -370,6 +374,7 @@ async function drawLineChart(){
                     .style("font-size", "15px");
                 
                 svg.append("path")
+                    .attr("class", "y-axis-right line-chart-elements")
                     .attr("d","M 495 515 435 515")
                     .attr("fill", "none")
                     .attr("stroke", "orange") // Adjust color as needed
@@ -381,10 +386,9 @@ async function drawLineChart(){
             let currentLineChartFunction = drawLineChart;
 
             function toggleLineChart() {
-              d3.select("svg").selectAll("*").remove()
+              d3.select("svg").selectAll(".line-chart-elements").remove()
                 currentLineChartFunction = (currentLineChartFunction === drawLineChart) ? drawLineChart1 : drawLineChart
                 currentLineChartFunction()
-                drawBarChart()
             }
             
 
