@@ -85,7 +85,7 @@
     margin: 10px 0; 
 }
 section {
-    height: 55%;
+    height: 65%;
     width: 85%;
     margin: auto;
     padding: 10px 0;
@@ -117,5 +117,119 @@ section {
     width: 100%;
     margin-bottom: 65px;
     font-size: 1.2em;
-    border: #fff 1px solid;
+    line-height: 1.5;
+    /* border: #fff 1px solid; */
+}
+
+/* box section  */
+.box_content {
+    display: flex;
+    margin-top: -40px;
+}
+
+.Exploration, .box, .ANNUAL {
+    flex: 1;
+    margin: 0px 15px;
+    padding: 15px;
+    border: 3px solid #ccc;
+    height: 350px;
+}
+/* button1 */
+.Exploration{
+    color: #fff;
+}
+.Exploration h1 {
+    font-size: 3em;
+    font-weight: 900;
+    margin-bottom: 10px; 
+    text-align: center;  
+}
+.Exploration ul {
+    display: flex;
+    flex-direction: column;
+}
+
+.Exploration ul li {
+    line-height: 1.7;
+    font-weight: 400;
+    font-size: 1.5em;
+    margin-left: 20px;
+}
+
+.Exploration ul li:last-child {
+    display: inline-block;
+    list-style-type: none;
+    margin-top: 10px;
+    padding: 5px 10px;
+    height: 40px;
+    width: 130px;
+    color: aqua;
+    border-radius: 10px;
+    background: linear-gradient(to left, rgb(110, 200, 236), rgb(238, 224, 144));
+}
+/* button2 */
+.box {
+    color: #fff;
+}
+.box h1 {
+    font-size: 3em;
+    font-weight: 900;
+    margin-bottom: 10px;
+    text-align: center;
+
+}
+.box ul {
+    display: flex;
+    flex-direction: column;
+}
+.box ul li {
+    line-height: 1.7;
+    font-weight: 400;
+    font-size: 1.5em;
+    margin-left: 20px;
+}
+.box ul li:last-child {
+    display: inline-block;
+    list-style-type: none;
+    margin-top: 10px;
+    padding: 5px 10px;
+    height: 40px;
+    width: 130px;
+    fill: #fff;
+    border-radius: 10px;
+    background: linear-gradient(to left, rgb(110, 200, 236), rgb(238, 224, 144));
+}
+/* button3 */
+.ANNUAL {
+    color: #fff;
+}
+
+.ANNUAL h1 {
+    font-size: 3em;
+    font-weight: 900;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.ANNUAL ul {
+    display: flex;
+    flex-direction: column;
+}
+
+.ANNUAL ul li {
+    line-height: 1.7;
+    font-weight: 400;
+    font-size: 1.5em;
+    margin-left: 20px;
+}
+
+.ANNUAL ul li:last-child {
+    display: inline-block;
+    list-style-type: none;
+    margin-top: 10px;
+    padding: 5px 10px;
+    height: 40px;
+    width: 130px;
+    color: aqua;
+    border-radius: 10px;
+    background: linear-gradient(to left,rgb(110, 200, 236),rgb(238, 224, 144));
 }

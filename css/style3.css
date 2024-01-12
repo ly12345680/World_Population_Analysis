@@ -33,6 +33,10 @@
     margin-left: auto; 
 }
 
+.navbar ul.center {
+    margin-left: auto;
+}
+
 .navbar ul li a {
     text-decoration: none;
     color: aliceblue;
