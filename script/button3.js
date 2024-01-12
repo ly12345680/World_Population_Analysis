@@ -1,9 +1,8 @@
-const h = 1500, w = 2500, padding = 30
+const h = 540, w = 2500, padding = 30
 
 async function loadData(url) {
   try {
     const data = await d3.csv(url, d3.rowConverter);
-    console.log(data)
     return data
   } catch (error) {
     console.error(error);
@@ -64,7 +63,7 @@ async function drawBarChart(){
         .attr("class", "x-axis")
         .attr("transform", `translate(0, ${500 - padding})`)
         .call(xAxis)
-        .attr("fill", "white");
+        .attr("fill", "#006d7c");
 
     svg.selectAll(".tick text") // Change the color of x-axis tick values to white
         .attr("fill", "white");
@@ -82,7 +81,7 @@ async function drawBarChart(){
         .attr("class", "y-axis")
         .attr("transform", `translate(${padding}, 0)`)
         .call(yAxis)
-        .attr("fill", "white");
+        .attr("fill", "#006d7c");
 
     svg.selectAll(".y-axis .tick text") // Change the color of y-axis tick values to white
         .attr("fill", "white");
@@ -214,7 +213,7 @@ async function drawLineChart(){
     svg.selectAll(".y-axis-right .tick text") // Change the color of y-axis tick values to white
         .attr("fill", "white");
     
-        svg.append("path")
+    svg.append("path")
         .datum(data)
         .attr("class", "y-axis-right line-chart-elements")
         .attr("fill", "none")
@@ -382,15 +381,162 @@ async function drawLineChart(){
                     .attr("d", line);
 
             }
-
-            let currentLineChartFunction = drawLineChart;
-
-            function toggleLineChart() {
-              d3.select("svg").selectAll(".line-chart-elements").remove()
-                currentLineChartFunction = (currentLineChartFunction === drawLineChart) ? drawLineChart1 : drawLineChart
-                currentLineChartFunction()
-            }
+            // async function scaleConstLine2(){
+            //     const dataRaw = await loadData("../asset/data/co2_mm_mlo.csv")
+            //     let data = []
+            //     for(let i = 0; i < dataRaw.length; i++){
+            //         data.push({"month": dataRaw[i]["month"],"average": dataRaw[i]["average"]
+            // })
+            //     }
+        
+            //     const xScale = d3.scaleLinear()
+            //         .domain([d3.min(data, d => d.month), d3.max(data,d => d.month)])
+            //         .range([padding, 1500 - padding]);
+        
+            //     const yScale = d3.scaleLinear()
+            //         .domain([d3.min(data, d => d.average), d3.max(data, d => d.average)])
+            //         .range([500 - padding - 200, padding - 25]);
+        
+            //         const colorScale = d3.scaleLinear()
+            //         .domain([d3.min(data, d => d.average), d3.max(data, d => d.average)])
+            //         .range([0, 255]);
+            // }
+            // async function drawLineChart2(){
+            //     const object = await scaleConstLine2();
+            //     const yScale = object.yScale;
+            //     const colorScale = object.colorScale;
+            //     const data = object.data;
+            //     const tooltip = d3.select(".tooltip")
             
+            //     let svg = d3.select("svg")
+            
+            //     const xScale = d3.scaleBand()
+            //         .domain(data.map(d => d.month))
+            //         .range([padding, 1500 - padding])
+            //         .padding(0.1);
+            
+            //     const line = d3.line()
+            //         .x(d => xScale(d.month) + 13)
+            //         .y(d => yScale(d.average) +  100);
+            
+            //     const yScaleForAverage = d3.scaleLinear()
+            //         .domain([d3.min(data, d => d.average), d3.max(data, d => d.average)])
+            //         .range([500 - padding - 200, padding - 25]);
+                
+            //     svg.append("path")
+            //         .datum(data)
+            //         .attr("class", "y-axis-right line-chart-elements")
+            //         .attr("fill", "none")
+            //         .attr("stroke", "Blue") 
+            //         .attr("stroke-width", 2)
+            //         .attr("d", line);
+            // }
 
-              drawBarChart();
-              drawLineChart(); 
+async function scaleMiniLine(){
+    const dataRaw = await loadData("../asset/data/co2_mm_mlo.csv")
+    let data = []
+    let currentYear = +dataRaw[0]["year"], currentMonth = dataRaw[0]["month"], index = 0, sum = 0, startMonth = currentMonth
+    console.log(data)
+
+    while(data.length <= 10){
+        if(currentYear === +dataRaw[index]["year"] && currentMonth < 13){
+            currentMonth++
+            sum += +dataRaw[index]["average"]
+
+        } else {
+            data.push({"year": dataRaw[index]["year"],"average": sum/(currentMonth-startMonth)})
+            currentYear++
+            currentMonth = 1
+            sum = 0
+            startMonth = 1
+        }
+        index++
+    }
+    console.log(data)
+
+    const yScale = d3.scaleLinear()
+    .domain([d3.max(data, function(d) { return d.average; }), 0])
+    .range([padding,500 - padding]);
+
+    const colorScale = d3.scaleLinear()
+    .domain([d3.max(data, (d) => {return d.population}),d3.min(data, (d) => {return d.population})])
+    .range([100,255])
+
+    return {'data': data, 'xScale':null, 'yScale':yScale, 'colorScale': colorScale}
+}
+
+async function drawMiniLineChart(){
+    const object = await scaleMiniLine();
+    const yScale = object.yScale;
+    const colorScale = object.colorScale;
+    const data = object.data;
+
+    let svg = d3.select(".container").append("div")
+    .attr("class", "linechart")
+    .append("svg")
+    .attr("height", h)
+    .attr("width", w)
+
+    const xScale = d3.scaleBand()
+        .domain(data.map(d => d.year))
+        .range([padding, 1500 - padding])
+        .padding(0.1);
+
+    const line = d3.line()
+        .x(d => xScale(d.year) + 13)
+        .y(d => yScale(d.average) + 100);
+
+    const yScaleForTemp = d3.scaleLinear()
+        .domain([d3.min(data, d => d.average), d3.max(data, d => d.average)])
+        .range([500 - padding - 200, padding - 25]);
+
+    const yAxisForTemp = d3.axisRight(yScaleForTemp); // Use axisRight for y-axis on the right
+
+    svg.append("g")
+        .attr("class", "y-axis-right line-chart-elements") // Add a class for styling
+        .attr("transform", `translate(${1475}, 100)`) // Position on the right side
+        .call(yAxisForTemp)
+        .attr("fill", "Blue");
+
+    svg.selectAll(".y-axis-right .tick text") // Change the color of y-axis tick values to white
+        .attr("fill", "white");
+    
+    svg.append("path")
+        .datum(data)
+        .attr("class", "y-axis-right line-chart-elements")
+        .attr("fill", "none")
+        .attr("stroke", "Blue") // Adjust color as needed
+        .attr("stroke-width", 2)
+        .attr("d", line);
+
+    svg.append("text")
+        .attr("x", 500)
+        .attr("y", 520)
+        .attr("class", "y-axis-right line-chart-elements")
+        .text("Average CO2")
+        .attr("fill", "Blue")
+        .style("font-size", "15px");
+
+    svg.append("path")
+        .attr("class", "y-axis-right line-chart-elements")
+        .attr("d","M 495 515 435 515")
+        .attr("fill", "none")
+        .attr("stroke", "Blue") 
+        .attr("stroke-width", 2)
+        .attr("d", line);
+}
+
+let currentLineChartFunction = drawLineChart;
+
+function toggleLineChart() {
+    d3.select("svg").selectAll(".line-chart-elements").remove()
+    currentLineChartFunction = (currentLineChartFunction === drawLineChart) ? drawLineChart1 : drawLineChart
+    currentLineChartFunction()
+}
+
+
+drawBarChart();
+drawMiniLineChart();
+drawLineChart(); 
+drawLineChart2();
+
