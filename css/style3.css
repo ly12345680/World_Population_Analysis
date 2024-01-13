@@ -71,3 +71,6 @@ button {
     white-space: nowrap;
     box-sizing: border-box;
 }
+.tick text{
+    fill: white;
+}
