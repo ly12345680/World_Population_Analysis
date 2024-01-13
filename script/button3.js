@@ -151,12 +151,6 @@ async function drawBarChart1(){
     .style("fill", "white")
     .style("font-size","20px")
 
-    yLabel.text('Population (in Billion)')
-    .attr('x', -500/3)
-    .attr('y', 30)
-    .attr("dy", "1em")
-    .attr('transform', 'rotate(-90)')
-    .style("fill", "white")
 }
 async function scaleConstLine(){
     const dataRaw = await loadData('../asset/data/Global_annual_mean_temp.csv')
@@ -171,7 +165,7 @@ async function scaleConstLine(){
 
     const yScale = d3.scaleLinear()
         .domain([d3.min(data, d => d.no_smoothing), d3.max(data, d => d.no_smoothing)])
-        .range([500 - padding - 200, padding - 25]);
+        .range([h - 192, padding - 25]);
 
     return {'data': data, 'xScale': xScale, 'yScale': yScale};
 }
@@ -195,7 +189,7 @@ async function drawLineChart(){
 
     const yScaleForTemp = d3.scaleLinear()
         .domain([d3.min(data, d => d.no_smoothing), d3.max(data, d => d.no_smoothing)])
-        .range([500 - padding - 200, padding - 25]);
+        .range([h - 192, padding - 25]);
 
     const yAxisForTemp = d3.axisRight(yScaleForTemp); 
 
@@ -245,7 +239,7 @@ async function drawLineChart(){
         })
         svg.append("text")
             .attr("x", 500)
-            .attr("y", 60)
+            .attr("y", 520)
             .attr("class", "y-axis-right line-chart-elements")
             .text("Temperature values without any smoothing applied")
             .attr("fill", "red")
@@ -253,7 +247,7 @@ async function drawLineChart(){
 
         svg.append("path")
             .attr("class", "y-axis-right line-chart-elements")
-            .attr("d","M 495 55 435 55")
+            .attr("d","M 495 515 435 515")
             .attr("fill", "none")
             .attr("stroke", "red") // Adjust color as needed
             .attr("stroke-width", 2)
@@ -277,7 +271,7 @@ async function drawLineChart(){
 
             const yScale = d3.scaleLinear()
                 .domain([d3.min(data, d => d.lowess), d3.max(data, d => d.lowess)])
-                .range([500 - padding - 200, padding + 30]);
+                .range([h - 192, padding + 30]);
 
             return {'data': data, 'xScale': xScale, 'yScale': yScale};
         }
@@ -292,7 +286,7 @@ async function drawLineChart1(){
 
     const yScaleForLowess = d3.scaleLinear()
         .domain([d3.min(data, d => d.lowess), d3.max(data, d => d.lowess)])
-        .range([500 - padding - 200, padding + 30]);
+        .range([h - 192, padding + 30]);
 
     const yAxisForLowess = d3.axisRight(yScaleForLowess); // Use axisRight for y-axis on the right
 
@@ -353,14 +347,14 @@ async function drawLineChart1(){
         svg.append("text")
             .attr("class", "y-axis-right line-chart-elements")
             .attr("x", 500)
-            .attr("y", 60 )
+            .attr("y", 520 )
             .text("Temperature values smoothed using a Lowess")
             .attr("fill", "yellow")
             .style("font-size", "15px");
         
         svg.append("path")
             .attr("class", "y-axis-right line-chart-elements")
-            .attr("d","M 495 55 435 55")
+            .attr("d","M 495 515 435 515")
             .attr("fill", "none")
             .attr("stroke", "yellow") // Adjust color as needed
             .attr("stroke-width", 2)
@@ -480,12 +474,6 @@ async function drawBarChart2(){
     .style("fill", "white")
     .style("font-size","20px")
 
-    yLabel.text('Population (in Billion)')
-    .attr('x', -500/3)
-    .attr('y', 30)
-    .attr("dy", "1em")
-    .attr('transform', 'rotate(-90)')
-    .style("fill", "white") 
 }
 async function scaleMiniLine() {
     const dataRaw = await loadData('../asset/data/co2_mm_mlo.csv')
@@ -501,7 +489,7 @@ async function scaleMiniLine() {
             
             const yScale = d3.scaleLinear()
                 .domain([d3.min(data, d => d.average), d3.max(data, d => d.average)])
-                .range([500 - padding - 200, padding + 30]);
+                .range([h - 425, padding + 30]);
 
             return {'data': data, 'xScale': xScale, 'yScale': yScale};
         }
@@ -521,11 +509,11 @@ async function drawMiniLine(){
     
     const line = d3.line()
         .x(d => xScale(d.time) + 13)
-        .y(d => yScale(d.average) + 100);
+        .y(d => yScale(d.average) +100);
 
     const yScaleForCO2 = d3.scaleLinear()
-        .domain([d3.min(data, d => d.average), d3.max(data, d => d.average)])
-        .range([500 - padding - 200, padding + 30]);
+        .domain([0, d3.max(data, d => d.average)])
+        .range([500 - padding - 100, padding + 30]);
 
     const yAxisForCO2 = d3.axisRight(yScaleForCO2); // Use axisRight for y-axis on the right
 
@@ -573,14 +561,14 @@ async function drawMiniLine(){
                 .style("opacity", 0);
         })
         svg.append("text")
-            .attr("x", 500)
-            .attr("y", 60 )
+            .attr("x", 700)
+            .attr("y", 520 )
             .text("CO2")
             .attr("fill", "#00AC1D")
             .style("font-size", "15px");
         
         svg.append("path")
-            .attr("d","M 495 55 435 55")
+            .attr("d","M 695 515 635 515")
             .attr("fill", "none")
             .attr("stroke", "#00AC1D") 
             .attr("stroke-width", 2)
