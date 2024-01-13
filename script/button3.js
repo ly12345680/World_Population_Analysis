@@ -532,7 +532,7 @@ async function drawMiniLine(){
     svg.append("g") 
         .attr("transform", `translate(${1485}, 100)`) // Position on the right side
         .call(yAxisForCO2)
-        .attr("fill", "white");
+        .attr("fill", "#00AC1D");
 
     svg.selectAll(".y-axis-right .tick text") // Change the color of y-axis tick values to white
         .attr("fill", "white");
@@ -595,8 +595,8 @@ function toggleLineChart() {
     currentLineChartFunction()
 }
 
-    drawBarChart1()
+    drawBarChart1().then(()=>drawLineChart())
     drawBarChart2().then(()=>drawMiniLine())
-    drawLineChart()
+    
 
 
