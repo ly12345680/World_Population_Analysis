@@ -4,12 +4,13 @@
     font-family: sans-serif;
 }
 
-.container {
-    width: 100%;
+body {
     height: 100vh;
     background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url(../asset/image/background.jpg);
     background-size: cover;
     background-position: center;
+    background-attachment: fixed;
+    margin: 0;
 }
 
 .navbar {
@@ -31,10 +32,6 @@
 
 .navbar ul.right {
     margin-left: auto; 
-}
-
-.navbar ul.center {
-    margin-left: auto;
 }
 
 .navbar ul li a {
@@ -60,4 +57,20 @@
 H1{
     color: white;
     font-size: 45px;
+}
+button {
+    display: block;
+    width:150px;
+    margin:10px auto;
+    padding:7px;
+    text-align:center;
+    background:#3389bb;
+    font-size:20px;
+    font-family: 'Arial', sans-serif;
+    color:#ffffff;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+.tick text{
+    fill: white;
 }

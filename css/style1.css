@@ -83,10 +83,12 @@
   
   
   line-height: 12px;
-  font-size: 12px;
+  font-size: 18px;
   font-family: "Helvetica";
-  color: #63ddc5;
+  color: #beeb43;
   bottom: 20%;
+  stroke: black;
+  stroke-width: 5px;
 }
 .bar-label.first {
   left: 0px;
