@@ -1,8 +1,8 @@
-var chartData = [];
+let chartData = [];
 var svg;
 
 const barChart = d3.select("#barChart");
-const chartWidth = 750;
+const chartWidth = 800;
 const chartHeight = 500;
 
 const margin = { top: 50, right: 20, bottom: 60, left: 100 };
@@ -14,33 +14,35 @@ const tooltip = d3.select("body").append("div")
   .style("opacity", 0);
 
 
-
 function rowConvertor(row) {
     return {
       country: row['Country/Territory'],
-      population: +row['2022 Population'],
-      continent: row['Continent']
+      population: +row['Population'],
+      year: row['Year']
     };
   }
 
 d3.csv(
-  "../asset/data/world_population.csv", 
+  "../asset/data/Map/new_dataset.csv", 
   rowConvertor
   ).then(data => {
+
+    const filteredData = data.filter(d => d.year === "2022");
+
     // Sort the data by population in descending order
-    data.sort((a, b) => b.population - a.population);
+    filteredData.sort((a, b) => b.population - a.population);
 
     // Filter only the top 20 countries by population
-    const top20 = data.slice(0,20);
+    const top20 = filteredData.slice(0,20);
 
-    const percentageData = calculatePopulationPercentage(data);
+    //const percentageData = calculatePopulationPercentage(data);
 
     // Create the bar chart
     createBarChart(top20);
     addButton(data);
     deleteButton(data);
 
-    createPieChart(percentageData);
+    //createPieChart(percentageData);
 
   }).catch((error) => {
     console.log(error);
@@ -72,7 +74,7 @@ function createBarChart(data) {
       .attr("y", -30)
       .style("font-weight", "bold")
       .style("fill", "white")
-      .text("Top Countries by Population in 2022");
+      .text("Top Countries by Population around the Wolrd");
 
 
     const xScale = d3.scaleBand()
@@ -147,9 +149,9 @@ function createBarChart(data) {
         tooltip.style("opacity", 0);
       })
       .transition() // Add transition animation
-    .duration(2000) // Set the duration of the animation (in milliseconds)
-    .attr("y", d => yScale(d.population)) // Animate the bars to their final height
-    .attr("height", d => height - yScale(d.population)); // Animate the bars to their final height;
+    .duration(2000) // duration of animation 
+    .attr("y", d => yScale(d.population)) // Animate the bars 
+    .attr("height", d => height - yScale(d.population)); // Animate the bars
 
     
 } // end function createBarChart
@@ -192,9 +194,46 @@ function updateChart() {
   chartData.sort((a, b) => b.population - a.population)
   createBarChart(chartData);
 } // end function updateChart
+
+document.getElementById("sortCriterion").addEventListener("change", changeYear);
+function changeYear() {
+  const selectedYear = document.getElementById("sortCriterion").value;
+  d3.csv(
+    "../asset/data/Map/new_dataset.csv", 
+    rowConvertor
+    ).then(data => {
+  
+      const filteredData = data.filter(d => d.year === selectedYear);
+  
+      // Sort the data by population in descending order
+      filteredData.sort((a, b) => b.population - a.population);
+  
+      // Filter only the top 20 countries by population
+      const top20 = filteredData.slice(0,20);
+  
+      d3.select("#barChart svg").remove();
+
+      // Create the bar chart
+      createBarChart(top20);
+      addButton(data);
+      deleteButton(data);
+    })
+}
 /* ************* end of bar chart part ************* */
 
 /* ************* for the pie chart part ************* */
+
+d3.csv(
+  "../asset/data/Map/new_dataset.csv", 
+  rowConvertor2
+  ).then(data => {
+  const percentageData = calculatePopulationPercentage(data);
+  createPieChart(percentageData);
+  updatePieChart( percentageData);
+}).catch((error) => {
+   console.log(error);
+});
+
 
 function calculatePopulationPercentage(data) {
   const continentPopulation = d3.rollups(data, v => d3.sum(v, d => d.population), d => d.continent);
@@ -232,7 +271,7 @@ function createPieChart(data) {
     .attr("y", -radius - 30)
     .style("font-weight", "bold")
     .style("fill", "white")
-    .text("Population Percentage by Continent in 2022");
+    .text("Continent Population Percentage over Time");
 
   const arcs = pieChart.selectAll("arc")
     .data(pie(data))
@@ -274,7 +313,24 @@ function createPieChart(data) {
     .style("font-size", "14px")
     .style("fill", "white")
     .text(d => `${d.continent}: ${d.percentage.toFixed(2)}%`);
+
+  
 }
+function updatePieChart() {
+  const selectedYear = document.getElementById("sortCriterion").value;
+  d3.csv("../asset/data/Map/new_dataset.csv", rowConvertor2)
+    .then(data => {
+      const filteredData = data.filter(d => d.year === selectedYear);
+      const percentageData = calculatePopulationPercentage(filteredData);
+      d3.select("#pieChart svg").remove(); // Remove previous chart
+      createPieChart(percentageData);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
+
 /* ************* end of pie chart part ************* */
 
 /* ************* for the bar chart part ************* */
@@ -341,12 +397,12 @@ function createLineChart(populationByContinent) {
   // Scales for x and y
   const xScale = d3.scalePoint()
     .domain(years)
-    .range([width, 0])
+    .range([(width - 200), 0])
     .padding(0);
 
   const yScale = d3.scaleLinear()
     .domain([
-      0,
+      20,
       d3.max(
         Array.from(populationByContinent.values()).flatMap((map) =>
           Array.from(map.values())
@@ -363,7 +419,7 @@ function createLineChart(populationByContinent) {
   // Append the chart name
   svg.append("text")
     .attr("class", "chart-title")
-    .attr("x", width / 2)
+    .attr("x", (width / 2) - 100)
     .attr("y", -margin.top / 2)
     .attr("text-anchor", "middle")
     .text("Population by Continent 1970 - 2022")
@@ -389,13 +445,34 @@ function createLineChart(populationByContinent) {
     .text("Population")
     .style("fill", "white");
 
-  // Create a tooltip element
-  // const tooltip = d3
-  //   .select("#lineChart")
-  //   .append("div")
-  //   .attr("class", "tooltip")
-  //   .style("opacity", 0);
+  const legend = svg
+    .append("g")
+    .attr("class", "legend")
+    .attr("transform", `translate(${width + margin.right - 200}, 20)`);
 
+  const continents = Array.from(populationByContinent.keys());
+
+  legend.selectAll(".legend-item")
+    .data(continents)
+    .enter()
+    .append("g")
+    .attr("class", "legend-item")
+    .attr("transform", (d, i) => `translate(0, ${i * 20})`)
+    .each(function (continent) {
+      const legendItem = d3.select(this);
+
+      legendItem.append("rect")
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", colorScale(continent));
+
+      legendItem.append("text")
+        .attr("x", 15)
+        .attr("y", 7)
+        .attr("dy", "0.35em")
+        .style("fill", "white")
+        .text(continent);
+    });
   populationByContinent.forEach((populationByYear, continent) => {
     // Convert the populationByYear map to an array of objects
     const data = Array.from(populationByYear, ([year, population]) => ({
@@ -444,5 +521,4 @@ function createLineChart(populationByContinent) {
     .style("fill", "#fff");
    
 }
-
 /* ************* end of line chart part ************* */

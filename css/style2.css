@@ -76,4 +76,18 @@
     padding: 50px;
     
 }
+label[for="sortCriterion"] {
+  color: white;
+}
+#barChart {
+margin-bottom: 50px;
+}
+
+#pieChart {
+margin-bottom: 50px;
+}
+
+#lineChart {
+margin-bottom: 50px;
+}
 
