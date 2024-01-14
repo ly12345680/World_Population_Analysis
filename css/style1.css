@@ -184,7 +184,9 @@
 }
 .legend h1 {
   font: 22px "oswaldregular";
-  color: #fff;
+  color: #deef5d;
+  stroke-width: 1px;
+  stroke: black;
 }
 .index-level-bar{
   width: 20%;
