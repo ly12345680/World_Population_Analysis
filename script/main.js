@@ -7,24 +7,20 @@ document.addEventListener('DOMContentLoaded', function () {
     button1Link.addEventListener('click', function (event) {
       event.preventDefault();
       console.log('Button 1 clicked');
-      window.location.href = 'button1.html';
+      window.location.href = 'Exploration.html';
     });
   
     button2Link.addEventListener('click', function (event) {
       event.preventDefault();
       console.log('Button 2 clicked');
-      window.location.href = 'button2.html';
+      window.location.href = 'Overview.html';
     });
 
     button3Link.addEventListener('click', function (event) {
         event.preventDefault();
         console.log('Button 3 clicked');
-        window.location.href = 'button3.html';
+        window.location.href = 'Impact.html';
     });
 
-    button4Link.addEventListener('click', function (event) {
-        event.preventDefault();
-        console.log('Button 4 clicked');
-        window.location.href = 'button4.html';
-    });
+
   });
