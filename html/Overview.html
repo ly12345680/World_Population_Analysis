@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/style2.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <ul>
+                <li><a href="Exploration.html">BACK</a></li>
+            </ul>
+
+            <ul class="center">
+                <li><a href="main.html">HOME</a></li>
+            </ul>
+
+            <ul class="right">
+                <li><a href="Impact.html">NEXT</a></li>
+            </ul>
+        </div>
+        
+        <div id="chartContainer">
+            <div id="barChart">
+                <div id="buttonContainer">
+                    <input type="text" id="countryInput" placeholder="Enter country name">
+                    <button id="add-country" onclick="addButton(chartData)">Add Country</button>
+                    <button id="delete-country" onclick="deleteButton(chartData)">Delete Country</button>
+
+                    <label for="sortCriterion">Select Year:</label>
+                    <select id="sortCriterion" onchange="updateOption()">
+                        <option value="2022">2022</option>
+                        <option value="2020">2020</option>
+                        <option value="2015">2015</option>
+                        <option value="2010">2010</option>
+                        <option value="2000">2000</option>
+                        <option value="1990">1990</option>
+                        <option value="1980">1980</option>
+                        <option value="1970">1970</option>
+                    </select>
+
+                </div>
+            </div>
+            
+
+            <div id="pieChart">
+                <div id="buttonContainer">
+                    <label for="sortCriterion">Select Year:</label>
+                    <select id="sortCriterion" onchange="updatePieChart()">
+                        <option value="2022">2022</option>
+                        <option value="2020">2020</option>
+                        <option value="2015">2015</option>
+                        <option value="2010">2010</option>
+                        <option value="2000">2000</option>
+                        <option value="1990">1990</option>
+                        <option value="1980">1980</option>
+                        <option value="1970">1970</option>
+                    </select>
+                </div>
+
+            </div>
+            <div id="lineChart"></div>
+        </div>
+    </div>
+    
+    <script src="../script/overview.js"></script>
+</body>
+</html>
